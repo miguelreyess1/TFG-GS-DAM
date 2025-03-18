@@ -32,9 +32,9 @@ fun MyFinanceApp() {
             startDestination = Screen.Inicio.ruta,
             modifier = Modifier.padding(paddingInterno)
         ) {
-            composable(Screen.Inicio.ruta) { PantallaInicio() }
             composable(Screen.Transacciones.ruta) { PantallaTransacciones() }
             composable(Screen.Estadisticas.ruta) { PantallaEstadisticas() }
+            composable(Screen.Inicio.ruta) { PantallaInicio() }
             composable(Screen.Calculadora.ruta) { PantallaCalculadora() }
             composable(Screen.Perfil.ruta) { PantallaPerfil() }
         }
