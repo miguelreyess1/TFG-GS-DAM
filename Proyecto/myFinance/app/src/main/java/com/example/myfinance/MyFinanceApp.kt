@@ -8,9 +8,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.myfinance.navigation.Screen
+import com.example.myfinance.ui.PantallaCalculadora
+import com.example.myfinance.ui.PantallaEstadisticas
+import com.example.myfinance.ui.PantallaInicio
+import com.example.myfinance.ui.PantallaPerfil
+import com.example.myfinance.ui.PantallaTransacciones
+import com.example.myfinance.components.BarraNavegacion
+import com.example.myfinance.viewmodel.FinanceViewModel
 
 @Composable
-fun MyFinanceApp() {
+fun MyFinanceApp(viewModel: FinanceViewModel) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -34,7 +42,7 @@ fun MyFinanceApp() {
         ) {
             composable(Screen.Transacciones.ruta) { PantallaTransacciones() }
             composable(Screen.Estadisticas.ruta) { PantallaEstadisticas() }
-            composable(Screen.Inicio.ruta) { PantallaInicio() }
+            composable(Screen.Inicio.ruta) { PantallaInicio(viewModel = viewModel) }
             composable(Screen.Calculadora.ruta) { PantallaCalculadora() }
             composable(Screen.Perfil.ruta) { PantallaPerfil() }
         }

@@ -63,7 +63,7 @@ dependencies {
 
     // For Compose
 
-
+    implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
