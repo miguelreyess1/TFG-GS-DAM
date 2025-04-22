@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
+    "drei": "^2.2.21",
+    "framer-motion": "^12.7.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.5.1",
     "react-tsparticles": "^2.12.2",
+    "three": "^0.175.0",
     "tsparticles": "^3.8.1",
     "tsparticles-engine": "^2.12.0"
   },

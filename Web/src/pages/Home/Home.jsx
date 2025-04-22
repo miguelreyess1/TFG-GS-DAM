@@ -1,11 +1,14 @@
 import React from 'react';
 import './Home.css';
+import IphoneViewer from './IphoneViewer';
 
 export default function Home() {
   return (
     <div className="home-container">
-      <h2>Estás en Inicio</h2>
-      <p>Bienvenido a la página principal.</p>
+      
+      <IphoneViewer />
+      
     </div>
   );
 }
+
