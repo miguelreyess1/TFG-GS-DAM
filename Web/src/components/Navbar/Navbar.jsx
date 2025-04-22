@@ -1,6 +1,7 @@
 import './Navbar.css';
 import { FaHome, FaStar, FaDownload, FaEnvelope, FaGamepad } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
     return (
@@ -12,11 +13,21 @@ export default function Navbar() {
                         <h3>MyFinance</h3>
                     </div>
                     <ul className="nav-links">
-                        <li><a href="#"><FaHome /> Inicio</a></li>
-                        <li><a href="#"><FaStar /> Características</a></li>
-                        <li><a href="#"><FaGamepad /> Demo</a></li>
-                        <li><a href="#"><FaDownload /> Descarga</a></li>
-                        <li><a href="#"><FaEnvelope /> Contacto</a></li>
+                        <li>
+                        <Link to="/"><FaHome /> Inicio</Link>
+                        </li>
+                        <li>
+                        <Link to="/caracteristicas"><FaStar /> Características</Link>
+                        </li>
+                        <li>
+                        <Link to="/demo"><FaGamepad /> Demo</Link>
+                        </li>
+                        <li>
+                        <Link to="/descarga"><FaDownload /> Descarga</Link>
+                        </li>
+                        <li>
+                        <Link to="/contacto"><FaEnvelope /> Contacto</Link>
+                        </li>
                     </ul>
                 </div>
             </nav>
