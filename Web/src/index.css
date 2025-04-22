@@ -1,7 +1,13 @@
-* {
+body {
   margin: 0;
+  min-height: 100vh;
+  background-image: url('/fondo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Inter', sans-serif;
 }
 
-body {
-  background-color: #ccdff1;
+html {
+  height: 100%;
 }
