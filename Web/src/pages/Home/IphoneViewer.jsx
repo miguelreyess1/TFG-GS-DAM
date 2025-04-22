@@ -2,7 +2,7 @@ import React, { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 
-function IphoneModel() {
+function IphoneModel({posicion}) {
   const { scene } = useGLTF('iphone.glb');
   const modelRef = useRef();
 
@@ -45,11 +45,12 @@ function IphoneModel() {
     <primitive
       ref={modelRef}
       object={scene}
-      scale={1.2}
+      scale={1.0}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerOut={handlePointerUp}
+      position={posicion}
     />
   );
 }
@@ -58,12 +59,13 @@ export default function IphoneViewer() {
   return (
     <Canvas
         className="canva"
-        style={{ marginTop: '250px' }}
-        camera={{ position: [4, -2, 7], fov: 40 }}
+        camera={{ position: [1.5, 0, 4], fov: 50}}
     >
       <ambientLight intensity={1.5} />
       <Suspense fallback={null}>
-        <IphoneModel className='iphone'/>
+        <IphoneModel 
+          posicion={[0, -1.2, 0]}
+        />
       </Suspense>
     </Canvas>
   );
