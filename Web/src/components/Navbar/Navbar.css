@@ -44,12 +44,12 @@ h3 {
 .nav-links {
     list-style: none;
     padding: 0;
-    width: 100%;
+    width: 90%;
 }
 
 .nav-links li {
     margin: 1rem 0;
-    width: 100%;
+    width: 90%;
 }
 
 .nav-links a {
