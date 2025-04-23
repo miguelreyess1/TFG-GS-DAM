@@ -1,20 +1,16 @@
-package com.example.myfinance
+package com.example.myfinance.navegacion
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.composable
 import com.example.myfinance.pantallas.*
+import androidx.navigation.compose.composable
 
 @Composable
-fun MyFinanceApp() {
-    val navController: NavHostController = rememberNavController()
+fun AppNavegacion() {
+    val navController = rememberNavController()
 
-    NavHost(
-        navController = navController,
-        startDestination = "inicio"
-    ) {
+    NavHost(navController = navController, startDestination = "inicio") {
         composable("inicio") { PantallaInicio(navController) }
         composable("historial") { PantallaHistorial(navController) }
         composable("transacciones") { PantallaTransacciones(navController) }
