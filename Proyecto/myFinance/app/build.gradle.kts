@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.animation.core.lint)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.navigation.compose)
+    implementation(libs.accessibility.test.framework)
     ksp(libs.androidx.room.compiler)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
 

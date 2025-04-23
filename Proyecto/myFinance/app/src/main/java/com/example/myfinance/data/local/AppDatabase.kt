@@ -1,14 +1,20 @@
 package com.example.myfinance.data.local
 
 import android.content.Context
-import androidx.room.*
-import com.example.myfinance.data.model.*
-import com.example.myfinance.data.local.dao.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.myfinance.data.local.dao.CategoriaDao
+import com.example.myfinance.data.local.dao.TransaccionDao
+import com.example.myfinance.data.local.dao.UsuarioDao
+import com.example.myfinance.data.model.Categoria
 import com.example.myfinance.data.model.Transaccion
+import com.example.myfinance.data.model.Usuario
 
 @Database(
     entities = [Transaccion::class, Categoria::class, Usuario::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(RoomTypeConverters::class)
