@@ -63,7 +63,7 @@ dependencies {
     // For Google authentication (if used)
 
     // For Compose
-
+    implementation(libs.coil.compose)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.core.ktx)

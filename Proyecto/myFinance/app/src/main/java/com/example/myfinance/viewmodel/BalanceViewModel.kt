@@ -27,10 +27,10 @@ class BalanceViewModel(
     private fun cargarBalance() {
         viewModelScope.launch {
             val ingresos = transaccionRepository.getTotalByTipo("ingreso")
-            val gastos   = transaccionRepository.getTotalByTipo("gasto")
+            val gastos = transaccionRepository.getTotalByTipo("gasto")
             _totalIngresos.value = ingresos
-            _totalGastos.value   = gastos
-            _balanceTotal.value  = ingresos - gastos
+            _totalGastos.value = gastos
+            _balanceTotal.value = ingresos - gastos
         }
     }
 }

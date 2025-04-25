@@ -14,7 +14,7 @@ import com.example.myfinance.data.model.Usuario
 
 @Database(
     entities = [Transaccion::class, Categoria::class, Usuario::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(RoomTypeConverters::class)
@@ -33,7 +33,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "myfinance_db"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

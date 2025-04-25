@@ -30,7 +30,7 @@ fun PantallaTransacciones(navController: NavController) {
 
     Scaffold(
         topBar = { Header() },
-        bottomBar = { BarraNavegacion(navController) }
+        bottomBar = { BarraNavegacion(navController) },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -86,7 +86,7 @@ fun PantallaTransacciones(navController: NavController) {
                                     categoriaId = 0
                                 )
                             )
-                            navController.popBackStack("inicio", false)
+                            cantidadText = ""
                         }
                     }
                 },
