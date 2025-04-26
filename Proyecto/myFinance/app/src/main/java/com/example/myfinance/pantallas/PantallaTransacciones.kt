@@ -22,7 +22,7 @@ import java.util.*
 
 @Composable
 fun PantallaTransacciones(navController: NavController) {
-    val db = AppDatabase.getInstance(LocalContext.current)
+    val db = AppDatabase.getDatabase(LocalContext.current)
     val repo = TransaccionRepository(db.transaccionDao())
     val scope = rememberCoroutineScope()
     var tipo by remember { mutableStateOf("gasto") }

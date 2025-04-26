@@ -26,7 +26,7 @@ import com.example.myfinance.viewmodel.BalanceViewModelFactory
 @Composable
 fun PantallaInicio(navController: NavController) {
     val context = LocalContext.current
-    val database = AppDatabase.getInstance(context)
+    val database = AppDatabase.getDatabase(context)
     val transaccionDao = database.transaccionDao()
     val repository = TransaccionRepository(transaccionDao)
     val viewModel: BalanceViewModel = viewModel(

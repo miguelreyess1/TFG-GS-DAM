@@ -3,7 +3,7 @@ package com.example.myfinance.data.local
 import androidx.room.TypeConverter
 import java.util.Date
 
-class RoomTypeConverters {
+class Converters {
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? = value?.let { Date(it) }
 

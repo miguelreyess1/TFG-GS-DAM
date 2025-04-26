@@ -5,7 +5,7 @@ import com.example.myfinance.data.model.Transaccion
 
 @Dao
 interface TransaccionDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(transaccion: Transaccion): Long
 
     @Update
@@ -17,6 +17,6 @@ interface TransaccionDao {
     @Query("SELECT * FROM transacciones ORDER BY fecha DESC")
     suspend fun getAll(): List<Transaccion>
 
-    @Query("SELECT SUM(monto) FROM transacciones WHERE tipo = :tipo")
-    suspend fun getTotalByTipo(tipo: String): Double?
+    @Query("SELECT IFNULL(SUM(monto), 0.0) FROM transacciones WHERE tipo = :tipo")
+    suspend fun getTotalByTipo(tipo: String): Double
 }

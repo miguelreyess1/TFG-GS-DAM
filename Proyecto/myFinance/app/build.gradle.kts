@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.navigation.compose)
     implementation(libs.accessibility.test.framework)
+    implementation(libs.androidx.databinding.adapters)
     ksp(libs.androidx.room.compiler)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
 

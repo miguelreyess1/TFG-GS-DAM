@@ -21,7 +21,7 @@ class UsuarioViewModel(application: Application) : AndroidViewModel(application)
     val profileState = _profileState.asStateFlow()
 
     init {
-        val dao = AppDatabase.getInstance(application).usuarioDao()
+        val dao = AppDatabase.getDatabase(application).usuarioDao()
         repository = UsuarioRepository(dao)
 
         viewModelScope.launch {
