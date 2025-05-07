@@ -1,10 +1,17 @@
 package com.example.myfinance.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.example.myfinance.data.model.CategorySum
 import com.example.myfinance.data.model.Transaccion
 
 @Dao
 interface TransaccionDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(transaccion: Transaccion): Long
 
@@ -19,4 +26,15 @@ interface TransaccionDao {
 
     @Query("SELECT IFNULL(SUM(monto), 0.0) FROM transacciones WHERE tipo = :tipo")
     suspend fun getTotalByTipo(tipo: String): Double
+
+    // Nueva consulta que agrupa y suma montos por categoría
+    @Query("""
+      SELECT c.nombre AS nombre,
+             SUM(t.monto) AS monto
+      FROM transacciones t
+      JOIN categorias c ON t.categoriaId = c.id
+      WHERE t.tipo = :tipo
+      GROUP BY c.nombre
+    """)
+    suspend fun getSumByCategoria(tipo: String): List<CategorySum>
 }

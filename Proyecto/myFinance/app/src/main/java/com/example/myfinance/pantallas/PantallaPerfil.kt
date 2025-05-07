@@ -74,6 +74,7 @@ fun PantallaPerfil(navController: NavController) {
         Column(
             modifier = Modifier
                 .padding(padding)
+                .background(Color(0xFFFAFAFA))
                 .fillMaxSize()
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,7 +119,7 @@ private fun ProfileImage(
         modifier = Modifier
             .size(128.dp)
             .clip(CircleShape)
-            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            .border(2.dp, Color(0xFF62DBB1), CircleShape)
             .clickable(enabled = isEditing) { onImageSelect() }
     ) {
         if (imageUri != null) {
@@ -132,7 +133,7 @@ private fun ProfileImage(
             Icon(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = "Avatar",
-                tint = MaterialTheme.colorScheme.primary,
+                tint = Color(0xFF62DBB1),
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -144,7 +145,7 @@ private fun ProfileImage(
                 tint = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    .background(Color(0xFF62DBB1), CircleShape)
                     .padding(6.dp)
             )
         }
@@ -171,7 +172,8 @@ private fun EditProfileSection(
 
         Button(
             onClick = onSave,
-            enabled = userName.isNotBlank()
+            enabled = userName.isNotBlank(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF62DBB1))
         ) {
             Text("Guardar cambios")
         }
@@ -188,7 +190,7 @@ private fun ViewProfileSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "$userName!",
+            text = userName,
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center
         )
@@ -196,7 +198,8 @@ private fun ViewProfileSection(
         FilledTonalButton(
             onClick = onEdit,
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                containerColor = Color(0xFF62DBB1),
+                contentColor = Color.White
             )
         ) {
             Icon(Icons.Default.Edit, contentDescription = "Editar")

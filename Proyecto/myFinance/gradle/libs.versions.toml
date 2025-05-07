@@ -14,6 +14,7 @@ composeBom = "2024.04.01"
 lifecycleViewmodelCompose = "2.8.7"
 lifecycleViewmodelKtx = "2.8.7"
 materialIconsExtended = "1.7.8"
+mpandroidchart = "3.1.0"
 navigationComposeVersion = "2.5.3"
 navigationRuntimeKtx = "2.8.5"
 navigationCompose = "2.8.5"
@@ -27,6 +28,7 @@ runtimeLivedata = "1.7.8"
 androidxNavigationCompose = "2.8.7"
 accessibilityTestFramework = "4.1.1"
 databindingAdapters = "8.9.2"
+benchmarkMacro = "1.3.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,9 +60,11 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-animation-core-lint = { group = "androidx.compose.animation", name = "animation-core-lint", version.ref = "animationCoreLint" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigationCompose" }
 accessibility-test-framework = { group = "com.google.android.apps.common.testing.accessibility.framework", name = "accessibility-test-framework", version.ref = "accessibilityTestFramework" }
 androidx-databinding-adapters = { group = "androidx.databinding", name = "databinding-adapters", version.ref = "databindingAdapters" }
+androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-macro", version.ref = "benchmarkMacro" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
