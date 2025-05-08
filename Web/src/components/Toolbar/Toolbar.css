@@ -8,9 +8,9 @@
     padding: 12px 12px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
+}
   
-  .toolbar-btn {
+.toolbar-btn {
     font-size: 1.7rem;
     cursor: pointer;
     color: #333;
@@ -18,9 +18,9 @@
     align-items: center;
     justify-content: center;
     transition: transform 0.2s ease;
-  }
+}
 
-  .toolbar-btn a {
+.toolbar-btn a {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -28,18 +28,23 @@
     text-decoration: none;
     height: 100%;
     width: 100%;
-  }
+}
 
-  .toolbar-btn a:visited {
+.toolbar-btn a:visited {
     color: inherit;
-  }
+}
   
-  .toolbar-btn:hover {
+.toolbar-btn:hover {
     transform: scale(1.1);
-  }
+}
   
-  .toolbar-flag {
+.toolbar-flag {
     width: 30px;
     height: 30px;
-  }
+}
   
+@media (max-width: 768px) {
+  .toolbar {
+    display: none;
+  }
+}
