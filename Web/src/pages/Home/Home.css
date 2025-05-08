@@ -63,7 +63,6 @@
     align-items: center;
     justify-content: center;
     height: auto;
-    min-height: 100vh;
   }
 
   .home-content {
@@ -80,7 +79,8 @@
     right: 2%;   
     transform: none;
     width: 200px;
-    height: 350px;
+    height: 330px;
+    margin-bottom: 1rem;
   }
 
   .home-content h1 {
