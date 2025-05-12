@@ -6,6 +6,7 @@ import com.example.myfinance.data.model.Transaccion
 import com.example.myfinance.data.repository.TransaccionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TransaccionViewModel(
@@ -13,7 +14,7 @@ class TransaccionViewModel(
 ) : ViewModel() {
 
     private val _transacciones = MutableStateFlow<List<Transaccion>>(emptyList())
-    val transacciones: StateFlow<List<Transaccion>> = _transacciones
+    val transacciones: StateFlow<List<Transaccion>> = _transacciones.asStateFlow()
 
     init {
         cargarTransacciones()

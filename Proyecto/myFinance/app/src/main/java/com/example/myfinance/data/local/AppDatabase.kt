@@ -14,7 +14,7 @@ import com.example.myfinance.data.model.Usuario
 
 @Database(
     entities = [Transaccion::class, Usuario::class, Categoria::class],
-    version = 4,               // ← Incrementado de 3 a 4
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -34,7 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .fallbackToDestructiveMigration()  // Destruye y vuelve a crear si cambia versión
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

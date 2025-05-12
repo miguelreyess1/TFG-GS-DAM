@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.myfinance.data.model.CategorySum
 import com.example.myfinance.data.model.Transaccion
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransaccionDao {
@@ -27,14 +28,13 @@ interface TransaccionDao {
     @Query("SELECT IFNULL(SUM(monto), 0.0) FROM transacciones WHERE tipo = :tipo")
     suspend fun getTotalByTipo(tipo: String): Double
 
-    // Nueva consulta que agrupa y suma montos por categoría
     @Query("""
-      SELECT c.nombre AS nombre,
-             SUM(t.monto) AS monto
-      FROM transacciones t
-      JOIN categorias c ON t.categoriaId = c.id
-      WHERE t.tipo = :tipo
-      GROUP BY c.nombre
-    """)
-    suspend fun getSumByCategoria(tipo: String): List<CategorySum>
+    SELECT c.nombre AS nombre, 
+           ABS(SUM(t.monto)) AS monto 
+    FROM transacciones t 
+    JOIN categorias c ON t.categoriaId = c.id 
+    WHERE t.tipo = :tipo 
+    GROUP BY c.nombre
+""")
+    fun getSumByCategoriaFlow(tipo: String): Flow<List<CategorySum>>
 }

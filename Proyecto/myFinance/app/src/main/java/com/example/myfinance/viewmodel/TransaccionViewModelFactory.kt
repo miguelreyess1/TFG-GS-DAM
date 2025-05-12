@@ -8,10 +8,12 @@ class TransaccionViewModelFactory(
     private val repository: TransaccionRepository
 ) : ViewModelProvider.Factory {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TransaccionViewModel::class.java)) {
-            return TransaccionViewModel(repository) as T
+        return if (modelClass.isAssignableFrom(TransaccionViewModel::class.java)) {
+            TransaccionViewModel(repository) as T
+        } else {
+            throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

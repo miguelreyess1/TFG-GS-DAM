@@ -37,6 +37,7 @@ import com.example.myfinance.data.model.CategorySum
 import com.example.myfinance.data.repository.TransaccionRepository
 import com.example.myfinance.viewmodel.BalanceViewModel
 import com.example.myfinance.viewmodel.BalanceViewModelFactory
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -50,12 +51,10 @@ fun PantallaInicio(navController: NavController) {
         factory = BalanceViewModelFactory(repo)
     )
 
-    // Totales
     val ingresos by viewModel.totalIngresos.collectAsState()
     val gastos   by viewModel.totalGastos.collectAsState()
     val balance  by viewModel.balanceTotal.collectAsState()
 
-    // Estadísticas
     val statsGastos   by viewModel.statsGastos.collectAsState(emptyList())
     val statsIngresos by viewModel.statsIngresos.collectAsState(emptyList())
 
@@ -90,7 +89,7 @@ fun PantallaInicio(navController: NavController) {
 
             PieChartCard(
                 title = "Distribución de Gastos",
-                data = statsGastos,
+                data = statsGastos.map { it.copy(monto = abs(it.monto)) },
                 modifier = Modifier.fillMaxWidth()
             )
 

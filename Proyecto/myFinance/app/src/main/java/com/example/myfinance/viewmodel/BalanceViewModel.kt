@@ -11,8 +11,6 @@ import kotlinx.coroutines.launch
 class BalanceViewModel(
     private val transaccionRepository: TransaccionRepository
 ) : ViewModel() {
-
-    // Totales
     private val _totalIngresos = MutableStateFlow(0.0)
     val totalIngresos: StateFlow<Double> = _totalIngresos
 
@@ -22,7 +20,6 @@ class BalanceViewModel(
     private val _balanceTotal = MutableStateFlow(0.0)
     val balanceTotal: StateFlow<Double> = _balanceTotal
 
-    // Estadísticas por categoría
     private val _statsGastos = MutableStateFlow<List<CategorySum>>(emptyList())
     val statsGastos: StateFlow<List<CategorySum>> = _statsGastos
 
@@ -36,8 +33,8 @@ class BalanceViewModel(
 
     private fun cargarBalance() {
         viewModelScope.launch {
-            val ingresos = transaccionRepository.getTotalByTipo("ingreso")
-            val gastos = transaccionRepository.getTotalByTipo("gasto")
+            val ingresos = transaccionRepository.getTotalByTipo("INGRESO")
+            val gastos = transaccionRepository.getTotalByTipo("GASTO")
             _totalIngresos.value = ingresos
             _totalGastos.value = gastos
             _balanceTotal.value = ingresos - gastos
@@ -45,19 +42,20 @@ class BalanceViewModel(
     }
 
     private fun cargarStats() {
-        // Gastos
         viewModelScope.launch {
-            transaccionRepository.sumByCategoriaFlow("gasto")
-                .collect { lista ->
-                    _statsGastos.value = lista
+            transaccionRepository
+                .getSumByCategoria("INGRESO")
+                .collect { stats ->
+                    _statsIngresos.value = stats
                 }
         }
-        // Ingresos
         viewModelScope.launch {
-            transaccionRepository.sumByCategoriaFlow("ingreso")
-                .collect { lista ->
-                    _statsIngresos.value = lista
+            transaccionRepository
+                .getSumByCategoria("GASTO")
+                .collect { stats ->
+                    _statsGastos.value = stats
                 }
         }
     }
 }
+
