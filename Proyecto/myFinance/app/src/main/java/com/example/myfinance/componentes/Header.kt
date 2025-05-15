@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
@@ -16,7 +15,7 @@ import com.example.myfinance.R
 @Composable
 fun Header(titulo: String = "MyFinance") {
     Surface(
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         shadowElevation = 4.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -36,10 +35,9 @@ fun Header(titulo: String = "MyFinance") {
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = titulo,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = Color(0xFF2E2E2E),
-                    fontSize = 20.sp
-                )
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 20.sp
             )
         }
     }

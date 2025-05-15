@@ -34,12 +34,12 @@ fun PantallaCalculadora(navController: NavController) {
     Scaffold(
         topBar = { Header() },
         bottomBar = { BarraNavegacion(navController) },
-        containerColor = Color(0xFFF5F5F5)
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFAFAFA))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
@@ -49,13 +49,30 @@ fun PantallaCalculadora(navController: NavController) {
             Text(
                 text = "Calculadora de Interés Compuesto",
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
 
-            InputField(value = balanceInicial, label = "Balance inicial", suffix = "€") { balanceInicial = it }
-            InputField(value = depositoMensual, label = "Depósito mensual por mes", suffix = "€") { depositoMensual = it }
-            InputField(value = tasaAnual, label = "Tasa de interés anual", suffix = "%") { tasaAnual = it }
-            InputField(value = numeroAnios, label = "Número de años", suffix = "años") { numeroAnios = it }
+            InputField(
+                value = balanceInicial,
+                label = "Balance inicial",
+                suffix = "€"
+            ) { balanceInicial = it }
+            InputField(
+                value = depositoMensual,
+                label = "Depósito mensual",
+                suffix = "€"
+            ) { depositoMensual = it }
+            InputField(
+                value = tasaAnual,
+                label = "Tasa de interés anual",
+                suffix = "%"
+            ) { tasaAnual = it }
+            InputField(
+                value = numeroAnios,
+                label = "Número de años",
+                suffix = "años"
+            ) { numeroAnios = it }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -68,12 +85,11 @@ fun PantallaCalculadora(navController: NavController) {
                         val r = (tasaAnual.toDoubleOrNull() ?: 0.0) / 100
                         val n = numeroAnios.toIntOrNull() ?: 0
                         val months = n * 12
-                        val rm = if (n > 0) r / 12 else 0.0
+                        val rm = if (months > 0) r / 12 else 0.0
                         val acumuladoInicial = p * (1 + rm).pow(months)
                         val acumuladoDepositos = if (rm != 0.0)
                             m * (((1 + rm).pow(months) - 1) / rm)
-                        else
-                            m * months.toDouble()
+                        else m * months.toDouble()
                         val sumaDepositos = m * months.toDouble()
                         val total = acumuladoInicial + acumuladoDepositos
                         val interes = total - p - sumaDepositos
@@ -85,7 +101,10 @@ fun PantallaCalculadora(navController: NavController) {
                         showResults = true
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF62DBB1))
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("Calcular")
                 }
@@ -97,9 +116,12 @@ fun PantallaCalculadora(navController: NavController) {
                         numeroAnios = ""
                         showResults = false
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
-                    Text("Restablecer", color = Color(0xFF62DBB1))
+                    Text("Restablecer")
                 }
             }
 
@@ -117,6 +139,7 @@ fun PantallaCalculadora(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InputField(
     value: String,
@@ -129,9 +152,14 @@ private fun InputField(
         onValueChange = onValueChange,
         label = { Text(label) },
         singleLine = true,
-        trailingIcon = { Text(suffix, color = Color.Gray) },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp)
+        trailingIcon = { Text(suffix, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+        shape = RoundedCornerShape(12.dp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            cursorColor = MaterialTheme.colorScheme.primary
+        ),
+        modifier = Modifier.fillMaxWidth()
     )
 }
 
@@ -146,7 +174,9 @@ private fun ResultadoSection(
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
@@ -156,7 +186,8 @@ private fun ResultadoSection(
             Text(
                 text = "Puedes ahorrar",
                 style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = "%.2f €".format(totalAmount),
@@ -166,18 +197,18 @@ private fun ResultadoSection(
             Text(
                 text = "Ahorro de %.2f € mensual durante $years años".format(periodicDeposits / (years * 12)),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            HorizontalDivider(thickness = 1.dp, color = Color(0xFFDDDDDD))
-            DataRow("Balance inicial:", initialBalance, Color(0xFF9C27B0))
-            DataRow("Depósitos periódicos:", periodicDeposits, Color(0xFF2196F3))
-            DataRow("Interés total:", totalInterest, Color(0xFF4CAF50))
+            Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            DataRow("Balance inicial:", initialBalance)
+            DataRow("Depósitos periódicos:", periodicDeposits)
+            DataRow("Interés total:", totalInterest)
             PieChart(
                 data = listOf(initialBalance, periodicDeposits, totalInterest),
                 colors = listOf(
-                    Color(0xFF9C27B0),
-                    Color(0xFF2196F3),
-                    Color(0xFF4CAF50)
+                    MaterialTheme.colorScheme.primary,
+                    MaterialTheme.colorScheme.secondary,
+                    MaterialTheme.colorScheme.tertiary
                 )
             )
         }
@@ -185,13 +216,13 @@ private fun ResultadoSection(
 }
 
 @Composable
-private fun DataRow(label: String, value: Double, color: Color) {
+private fun DataRow(label: String, value: Double) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(label, color = color, style = MaterialTheme.typography.bodyMedium)
-        Text("%.2f €".format(value), style = MaterialTheme.typography.bodyMedium)
+        Text(label, color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.bodyMedium)
+        Text("%.2f €".format(value), color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.bodyMedium)
     }
 }
 
@@ -206,12 +237,7 @@ private fun PieChart(data: List<Double>, colors: List<Color>) {
         var startAngle = -90f
         data.forEachIndexed { index, value ->
             val sweep = (value / total * 360.0).toFloat()
-            drawArc(
-                color = colors[index],
-                startAngle = startAngle,
-                sweepAngle = sweep,
-                useCenter = true
-            )
+            drawArc(color = colors[index], startAngle = startAngle, sweepAngle = sweep, useCenter = true)
             startAngle += sweep
         }
     }

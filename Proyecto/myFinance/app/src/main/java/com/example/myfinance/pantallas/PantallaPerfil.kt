@@ -20,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -34,52 +33,61 @@ import com.example.myfinance.viewmodel.UsuarioViewModel
 import com.example.myfinance.viewmodel.UsuarioViewModelFactory
 
 @Composable
-fun PantallaPerfil(navController: NavController) {
-    val context = LocalContext.current
-    val viewModel: UsuarioViewModel = viewModel(
-        factory = UsuarioViewModelFactory(context.applicationContext as Application)
+fun PantallaPerfil(
+    navController: NavController,
+    isDarkTheme: Boolean,
+    onToggleTheme: (Boolean) -> Unit
+) {
+    // ViewModel de usuario
+    val context = LocalContext.current.applicationContext as Application
+    val usuarioViewModel: UsuarioViewModel = viewModel(
+        factory = UsuarioViewModelFactory(context)
     )
+    // Estado del perfil
+    val profileState by usuarioViewModel.profileState.collectAsState()
 
-    val profileState by viewModel.profileState.collectAsState()
-
-    var editingName by remember { mutableStateOf(profileState?.nombre ?: "") }
-    var imageUri by remember { mutableStateOf(profileState?.imageUri?.let { Uri.parse(it) }) }
+    // Estados de UI
     var isEditing by rememberSaveable { mutableStateOf(false) }
+    var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var editingName by rememberSaveable { mutableStateOf(profileState?.nombre.orEmpty()) }
 
-    LaunchedEffect(profileState) {
-        if (profileState == null) {
-            isEditing = true
-        } else {
-            editingName = profileState!!.nombre
-            imageUri = profileState!!.imageUri?.let { Uri.parse(it) }
-            isEditing = false
+    LaunchedEffect(profileState?.nombre) {
+        if (!isEditing) {
+            editingName = profileState?.nombre.orEmpty()
         }
     }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { imageUri = it }
-    }
-
-    LaunchedEffect(profileState) {
-        profileState?.let {
-            editingName = it.nombre
-            imageUri = it.imageUri?.let { uri -> Uri.parse(uri) }
-        }
-    }
+    // Selector de imágenes
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? -> imageUri = uri }
 
     Scaffold(
         topBar = { Header() },
-        bottomBar = { BarraNavegacion(navController) }
+        bottomBar = { BarraNavegacion(navController) },
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
-                .background(Color(0xFFFAFAFA))
                 .fillMaxSize()
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
+            // Botones de tema
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(onClick = { onToggleTheme(false) }) {
+                    Text("Claro")
+                }
+                Button(onClick = { onToggleTheme(true) }) {
+                    Text("Oscuro")
+                }
+            }
+
             ProfileImage(
                 imageUri = imageUri,
                 isEditing = isEditing,
@@ -91,7 +99,7 @@ fun PantallaPerfil(navController: NavController) {
                     userName = editingName,
                     onNameChange = { editingName = it },
                     onSave = {
-                        viewModel.saveProfile(
+                        usuarioViewModel.saveProfile(
                             editingName,
                             imageUri?.toString()
                         )
@@ -100,7 +108,7 @@ fun PantallaPerfil(navController: NavController) {
                 )
             } else {
                 ViewProfileSection(
-                    userName = profileState?.nombre ?: "",
+                    userName = profileState?.nombre.orEmpty(),
                     onEdit = { isEditing = true }
                 )
             }
@@ -119,7 +127,7 @@ private fun ProfileImage(
         modifier = Modifier
             .size(128.dp)
             .clip(CircleShape)
-            .border(2.dp, Color(0xFF62DBB1), CircleShape)
+            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
             .clickable(enabled = isEditing) { onImageSelect() }
     ) {
         if (imageUri != null) {
@@ -133,7 +141,7 @@ private fun ProfileImage(
             Icon(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = "Avatar",
-                tint = Color(0xFF62DBB1),
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -142,16 +150,17 @@ private fun ProfileImage(
             Icon(
                 imageVector = Icons.Default.CameraAlt,
                 contentDescription = "Cambiar foto",
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .background(Color(0xFF62DBB1), CircleShape)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
                     .padding(6.dp)
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EditProfileSection(
     userName: String,
@@ -167,13 +176,20 @@ private fun EditProfileSection(
             onValueChange = onNameChange,
             label = { Text("Tu nombre") },
             leadingIcon = { Icon(Icons.Default.Edit, contentDescription = "Nombre") },
-            singleLine = true
+            singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
         )
 
         Button(
             onClick = onSave,
             enabled = userName.isNotBlank(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF62DBB1))
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             Text("Guardar cambios")
         }
@@ -192,14 +208,15 @@ private fun ViewProfileSection(
         Text(
             text = userName,
             style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         FilledTonalButton(
             onClick = onEdit,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF62DBB1),
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
             Icon(Icons.Default.Edit, contentDescription = "Editar")
