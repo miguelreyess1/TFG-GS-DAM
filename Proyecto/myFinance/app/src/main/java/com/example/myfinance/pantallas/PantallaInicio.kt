@@ -1,5 +1,6 @@
 package com.example.myfinance.pantallas
 
+import android.graphics.Paint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,14 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.myfinance.componentes.BarraNavegacion
@@ -35,13 +33,13 @@ import com.example.myfinance.componentes.Header
 import com.example.myfinance.data.local.AppDatabase
 import com.example.myfinance.data.model.CategorySum
 import com.example.myfinance.data.repository.TransaccionRepository
+import com.example.myfinance.theme.ChartColors
 import com.example.myfinance.viewmodel.BalanceViewModel
 import com.example.myfinance.viewmodel.BalanceViewModelFactory
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaInicio(navController: NavController) {
     val context = LocalContext.current
@@ -52,71 +50,112 @@ fun PantallaInicio(navController: NavController) {
     )
 
     val ingresos by viewModel.totalIngresos.collectAsState()
-    val gastos   by viewModel.totalGastos.collectAsState()
-    val balance  by viewModel.balanceTotal.collectAsState()
+    val gastos by viewModel.totalGastos.collectAsState()
+    val balance by viewModel.balanceTotal.collectAsState()
 
-    val statsGastos   by viewModel.statsGastos.collectAsState(emptyList())
+    val statsGastos by viewModel.statsGastos.collectAsState(emptyList())
     val statsIngresos by viewModel.statsIngresos.collectAsState(emptyList())
 
-    val bgColor    = Color(0xFFF5F5F5)
-    val primary    = Color(0xFF6ADDB0)
-    val textColor  = Color(0xFF004D40)
+    val cs = MaterialTheme.colorScheme
+    val background = cs.background
 
     Scaffold(
-        topBar        = { Header() },
-        bottomBar     = { BarraNavegacion(navController) },
-        containerColor = MaterialTheme.colorScheme.background
+        topBar = { Header() },
+        bottomBar = { BarraNavegacion(navController) },
+        containerColor = background
     ) { padding ->
         val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(bgColor)
+                .background(background)
                 .verticalScroll(scrollState)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            BalanceCard(balance, primary, Color.White)
+            BalanceCard(balance, cs.surface, cs.onBackground)
+
             Row(
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                MetricCard("Ingresos", ingresos, Icons.Default.ArrowDownward, Color(0xFF4CAF50), textColor, Modifier.weight(1f))
-                MetricCard("Gastos",   gastos,   Icons.Default.ArrowUpward,   Color(0xFFE53935), textColor, Modifier.weight(1f))
-                MetricCard("Ahorro",   balance,  Icons.Default.Savings,      Color(0xFF2196F3), textColor, Modifier.weight(1f))
+                MetricCard(
+                    title    = "Ingresos",
+                    value    = ingresos,
+                    icon     = Icons.Default.ArrowDownward,
+                    iconTint = cs.secondary,
+                    textColor= cs.onBackground,
+                    modifier = Modifier.weight(1f)
+                )
+                MetricCard(
+                    title    = "Gastos",
+                    value    = gastos,
+                    icon     = Icons.Default.ArrowUpward,
+                    iconTint = cs.error,
+                    textColor= cs.onBackground,
+                    modifier = Modifier.weight(1f)
+                )
+                MetricCard(
+                    title    = "Ahorro",
+                    value    = balance,
+                    icon     = Icons.Default.Savings,
+                    iconTint = cs.primary,
+                    textColor= cs.onBackground,
+                    modifier = Modifier.weight(1f)
+                )
             }
 
             PieChartCard(
-                title = "Distribución de Gastos",
-                data = statsGastos.map { it.copy(monto = abs(it.monto)) },
-                modifier = Modifier.fillMaxWidth()
+                title  = "Distribución de Gastos",
+                data   = statsGastos.map { it.copy(monto = abs(it.monto)) },
+                modifier= Modifier.fillMaxWidth(),
+                colors = ChartColors
             )
 
             PieChartCard(
-                title = "Distribución de Ingresos",
-                data = statsIngresos,
-                modifier = Modifier.fillMaxWidth()
+                title  = "Distribución de Ingresos",
+                data   = statsIngresos,
+                modifier= Modifier.fillMaxWidth(),
+                colors = ChartColors
             )
         }
     }
 }
 
 @Composable
-fun PieChartCard(
+private fun BalanceCard(balance: Double, backgroundColor: Color, textColor: Color) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(160.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = backgroundColor,
+            contentColor = textColor
+        )
+    ) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("BALANCE TOTAL", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(8.dp))
+            Text("%.2f €".format(balance), style = MaterialTheme.typography.displaySmall)
+        }
+    }
+}
+
+@Composable
+private fun PieChartCard(
     title: String,
     data: List<CategorySum>,
     modifier: Modifier = Modifier,
-    colors: List<Color> = listOf(
-        Color(0xFF6ADDB0), // Primary
-        Color(0xFF4D9DE0), // Azure
-        Color(0xFF7E57C2), // Violet
-        Color(0xFFFFB74D), // Orange
-        Color(0xFFE57373), // Coral
-        Color(0xFF81C784), // Green
-        Color(0xFF64B5F6), // Sky
-        Color(0xFFFFD54F)  // Amber
-    ),
+    colors: List<Color>,
     showLabels: Boolean = true
 ) {
     val total by remember(data) {
@@ -126,7 +165,10 @@ fun PieChartCard(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -134,7 +176,7 @@ fun PieChartCard(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF004D40)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             )
             Spacer(Modifier.height(16.dp))
@@ -146,7 +188,7 @@ fun PieChartCard(
                 contentAlignment = Alignment.Center
             ) {
                 if (total <= 0f) {
-                    Text("No hay datos disponibles", color = Color.Gray)
+                    Text("No hay datos disponibles", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     return@Box
                 }
 
@@ -159,7 +201,6 @@ fun PieChartCard(
                         val sweep = (entry.monto / total) * 360f
                         var color = colors[i % colors.size]
 
-                        // Draw main arc
                         drawArc(
                             color = color,
                             startAngle = startAngle,
@@ -169,21 +210,19 @@ fun PieChartCard(
                             topLeft = Offset(center.x - radius, center.y - radius)
                         )
 
-                        // Draw percentage labels
                         if (showLabels && sweep > 10f) {
                             val angleRad = Math.toRadians((startAngle + sweep / 2).toDouble())
                             val labelRadius = radius * 0.7
                             val x = center.x + (labelRadius * cos(angleRad)).toFloat()
                             val y = center.y + (labelRadius * sin(angleRad)).toFloat()
 
-
                             drawContext.canvas.nativeCanvas.drawText(
                                 "${"%.0f".format(entry.monto / total * 100)}%",
                                 x,
                                 y,
-                                android.graphics.Paint().apply {
-                                    color =Color.White
-                                    textAlign = android.graphics.Paint.Align.CENTER
+                                Paint().apply {
+                                    color = Color.White
+                                    textAlign = Paint.Align.CENTER
                                     textSize = if (sweep > 30f) 32f else 24f
                                     isFakeBoldText = true
                                 }
@@ -203,7 +242,6 @@ fun PieChartCard(
             ) {
                 itemsIndexed(data) { i, entry ->
                     val color = colors[i % colors.size]
-                    val percentage = (entry.monto / total) * 100
 
                     Row(
                         modifier = Modifier.padding(vertical = 4.dp),
@@ -215,15 +253,13 @@ fun PieChartCard(
                                 .background(color, CircleShape)
                         )
                         Spacer(Modifier.width(8.dp))
-                        Column {
-                            Text(
-                                text = entry.nombre,
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    color = Color(0xFF004D40),
-                                    fontWeight = FontWeight.Medium
-                                )
+                        Text(
+                            text = entry.nombre,
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontWeight = FontWeight.Medium
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -232,32 +268,10 @@ fun PieChartCard(
 }
 
 @Composable
-private fun BalanceCard(balance: Double, backgroundColor: Color, textColor: Color) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(160.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor, contentColor = textColor)
-    ) {
-        Column(
-            Modifier.fillMaxSize().padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text("BALANCE TOTAL", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-            Spacer(Modifier.height(8.dp))
-            Text("%.2f €".format(balance), style = MaterialTheme.typography.displaySmall)
-        }
-    }
-}
-
-@Composable
 private fun MetricCard(
     title: String,
     value: Double,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     iconTint: Color,
     textColor: Color,
     modifier: Modifier = Modifier
@@ -266,13 +280,21 @@ private fun MetricCard(
         modifier = modifier.height(120.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White, contentColor = textColor)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = textColor
+        )
     ) {
-        Column(Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.SpaceBetween) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             Icon(icon, contentDescription = title, tint = iconTint)
             Column {
-                Text(title, style = MaterialTheme.typography.labelSmall)
-                Text("%.2f €".format(value), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(title, style = MaterialTheme.typography.labelSmall, color = textColor)
+                Text("%.2f €".format(value), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = textColor)
             }
         }
     }

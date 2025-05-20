@@ -4,6 +4,12 @@ import android.app.Application
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,14 +37,16 @@ import com.example.myfinance.componentes.BarraNavegacion
 import com.example.myfinance.componentes.Header
 import com.example.myfinance.viewmodel.UsuarioViewModel
 import com.example.myfinance.viewmodel.UsuarioViewModelFactory
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.NightsStay
+import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun PantallaPerfil(
     navController: NavController,
-    isDarkTheme: Boolean,
     onToggleTheme: (Boolean) -> Unit
 ) {
-    // ViewModel de usuario
     val context = LocalContext.current.applicationContext as Application
     val usuarioViewModel: UsuarioViewModel = viewModel(
         factory = UsuarioViewModelFactory(context)
@@ -75,19 +83,6 @@ fun PantallaPerfil(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // Botones de tema
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Button(onClick = { onToggleTheme(false) }) {
-                    Text("Claro")
-                }
-                Button(onClick = { onToggleTheme(true) }) {
-                    Text("Oscuro")
-                }
-            }
-
             ProfileImage(
                 imageUri = imageUri,
                 isEditing = isEditing,
@@ -111,6 +106,61 @@ fun PantallaPerfil(
                     userName = profileState?.nombre.orEmpty(),
                     onEdit = { isEditing = true }
                 )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+            ) {
+                // Botón “Claro” con sol
+                Button(
+                    onClick = { onToggleTheme(false) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(48.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(24.dp)
+                        ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.WbSunny,
+                        contentDescription = "Tema Claro",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                // Botón “Oscuro” con luna
+                Button(
+                    onClick = { onToggleTheme(true) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(48.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(24.dp)
+                        ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF121212),
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.NightsStay,
+                        contentDescription = "Tema Oscuro",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }

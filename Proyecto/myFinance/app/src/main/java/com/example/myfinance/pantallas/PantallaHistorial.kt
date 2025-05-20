@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +37,7 @@ fun PantallaHistorial(navController: NavController) {
     val transaccionRepository = TransaccionRepository(appDatabase.transaccionDao())
     val categoriaRepository = CategoriaRepository(appDatabase.categoriaDao())
 
-    val transaccionViewModel = viewModel<TransaccionViewModel>(
+    val transaccionViewModel: TransaccionViewModel = viewModel(
         factory = TransaccionViewModelFactory(transaccionRepository)
     )
 
@@ -50,20 +49,21 @@ fun PantallaHistorial(navController: NavController) {
 
     Scaffold(
         topBar = { Header() },
-        bottomBar = { BarraNavegacion(navController) }
+        bottomBar = { BarraNavegacion(navController) },
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFFAFAFA))
+                .background(MaterialTheme.colorScheme.background)
         ) {
-            // Filtros
+            // Título y filtros
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = "Historial de Transacciones",
                     style = MaterialTheme.typography.titleLarge.copy(
-                        color = Color(0xFF004D40)
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -78,17 +78,16 @@ fun PantallaHistorial(navController: NavController) {
                             onClick = { selectedFilter = filter },
                             label = { Text(filter) },
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Color(0xFF6ADDB0),
-                                selectedLabelColor = Color.White
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor     = MaterialTheme.colorScheme.onPrimary
                             )
                         )
                     }
                 }
             }
-
             TransactionList(
                 transacciones = filterTransactions(transacciones, selectedFilter),
-                categorias = categorias
+                categorias     = categorias
             )
         }
     }
@@ -104,20 +103,19 @@ private fun TransactionList(transacciones: List<Transaccion>, categorias: List<C
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        groupedTransactions.forEach { (fecha, transaccionesDia) ->
+        groupedTransactions.forEach { (fecha, listaDia) ->
             item {
                 Text(
                     text = fecha,
                     style = MaterialTheme.typography.titleSmall,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-
-            items(transaccionesDia) { transaccion ->
+            items(listaDia) { transaccion ->
                 TransactionItem(
                     transaccion = transaccion,
-                    categoria = categorias.find { it.id == transaccion.categoriaId }
+                    categoria    = categorias.find { it.id == transaccion.categoriaId }
                 )
             }
         }
@@ -126,14 +124,20 @@ private fun TransactionList(transacciones: List<Transaccion>, categorias: List<C
 
 @Composable
 private fun TransactionItem(transaccion: Transaccion, categoria: Categoria?) {
-    val tipoColor = if (transaccion.tipo.uppercase() == "INGRESO") Color(0xFF4CAF50) else Color(0xFFE53935)
-    val icono = remember(categoria?.nombre) { iconoParaCategoria(categoria?.nombre ?: "") }
+    val tipoColor = if (transaccion.tipo.equals("INGRESO", ignoreCase = true))
+        MaterialTheme.colorScheme.primary
+    else
+        MaterialTheme.colorScheme.error
+
+    val icono = remember(transaccion.categoriaId) {
+        iconoParaCategoria(categoria?.nombre.orEmpty())
+    }
     val formatoHora = remember { SimpleDateFormat("HH:mm", Locale.getDefault()) }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
@@ -142,24 +146,22 @@ private fun TransactionItem(transaccion: Transaccion, categoria: Categoria?) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = icono,
+                imageVector   = icono,
                 contentDescription = null,
                 modifier = Modifier.size(32.dp),
-                tint = Color(0xFF004D40)
+                tint     = MaterialTheme.colorScheme.primary
             )
-
-            Spacer(Modifier.width(16.dp))
-
+            Spacer(modifier = Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Text(
-                    text = transaccion.descripcion.ifEmpty { categoria?.nombre ?: "Sin categoría" },
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Medium)
+                    text = transaccion.descripcion.ifEmpty { categoria?.nombre.orEmpty() },
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = formatoHora.format(transaccion.fecha),
+                    text  = formatoHora.format(transaccion.fecha),
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -167,13 +169,15 @@ private fun TransactionItem(transaccion: Transaccion, categoria: Categoria?) {
                 Text(
                     text = "${if (transaccion.tipo == "GASTO") "-" else ""}${"%.2f€".format(transaccion.monto)}",
                     style = MaterialTheme.typography.titleMedium.copy(
-                        color = tipoColor,
-                        fontWeight = FontWeight.Bold)
+                        color     = tipoColor,
+                        fontWeight = FontWeight.Bold
+                    )
                 )
                 Text(
                     text = transaccion.tipo.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color = tipoColor)
+                        color = tipoColor
+                    )
                 )
             }
         }
@@ -181,27 +185,27 @@ private fun TransactionItem(transaccion: Transaccion, categoria: Categoria?) {
 }
 
 private fun iconoParaCategoria(nombre: String): ImageVector = when (nombre) {
-    "Alimentación" -> Icons.Filled.Fastfood
-    "Transporte" -> Icons.Filled.DirectionsCar
-    "Hogar" -> Icons.Filled.Home
-    "Compras" -> Icons.Filled.ShoppingBag
-    "Ocio" -> Icons.Filled.Movie
-    "Salud" -> Icons.Filled.Favorite
-    "Educación" -> Icons.Filled.School
-    "Nómina" -> Icons.Filled.AttachMoney
-    "Inversiones" -> Icons.AutoMirrored.Filled.TrendingUp
-    "Freelance" -> Icons.Filled.Work
-    "Alquiler" -> Icons.Filled.House
-    "Regalos" -> Icons.Filled.CardGiftcard
-    "Reembolsos" -> Icons.Filled.Replay
-    "Ahorros" -> Icons.Filled.Savings
-    else -> Icons.Filled.MoreHoriz
+    "Alimentación"  -> Icons.Filled.Fastfood
+    "Transporte"    -> Icons.Filled.DirectionsCar
+    "Hogar"         -> Icons.Filled.Home
+    "Compras"       -> Icons.Filled.ShoppingBag
+    "Ocio"          -> Icons.Filled.Movie
+    "Salud"         -> Icons.Filled.Favorite
+    "Educación"     -> Icons.Filled.School
+    "Nómina"        -> Icons.Filled.AttachMoney
+    "Inversiones"   -> Icons.AutoMirrored.Filled.TrendingUp
+    "Freelance"     -> Icons.Filled.Work
+    "Alquiler"      -> Icons.Filled.House
+    "Regalos"       -> Icons.Filled.CardGiftcard
+    "Reembolsos"    -> Icons.Filled.Replay
+    "Ahorros"       -> Icons.Filled.Savings
+    else            -> Icons.Filled.MoreHoriz
 }
 
 private fun filterTransactions(transacciones: List<Transaccion>, filter: String): List<Transaccion> {
     return when (filter.uppercase()) {
         "INGRESO" -> transacciones.filter { it.tipo.equals("INGRESO", true) }
-        "GASTO" -> transacciones.filter { it.tipo.equals("GASTO", true) }
-        else -> transacciones
+        "GASTO"   -> transacciones.filter { it.tipo.equals("GASTO", true) }
+        else      -> transacciones
     }
 }

@@ -2,69 +2,70 @@ package com.example.myfinance.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.Typography
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-private val colorPrincipal = Color(0xFF6ADDB0)
-private val colorInactivo = Color(0xFF757575)
-private val colorInactivoOscuro = Color(0xFF424242)
-
-// Paleta de colores para modo claro
 private val LightColors = lightColorScheme(
-    primary = colorPrincipal,
-    onPrimary = Color.White,
-    secondary = colorInactivo,
-    onSecondary = Color.White,
+    primary = Color(0xFF6ADDB0),
+    primaryContainer = Color(0xFF8BC34A),
+    secondary = Color(0xFF00BCD4),
     background = Color(0xFFFFFFFF),
-    onBackground = Color(0xFF000000),
-    surface = Color(0xFFFFFFFF),
-    onSurface = Color(0xFF000000),
+    surface = Color(0xFFebffec),
     error = Color(0xFFB00020),
+    onPrimary = Color(0xFF000000),
+    onSecondary = Color(0xFF000000),
+    onBackground = Color(0xFF000000),
+    onSurface = Color(0xFF000000),
     onError = Color(0xFFFFFFFF)
 )
 
-// Paleta de colores para modo oscuro
 private val DarkColors = darkColorScheme(
-    primary = colorPrincipal,
-    onPrimary = Color.Black,
-    secondary = colorInactivoOscuro,
-    onSecondary = Color.White,
-    background = Color(0xFF121212),
-    onBackground = Color(0xFFFFFFFF),
+    primary = Color(0xFF6ADDB0),               // mismo verde que claro
+    primaryContainer = Color(0xFF33691E),
+    secondary = Color(0xFF00BCD4),
+    background = Color(0xFF121212),            // gris muy oscuro
     surface = Color(0xFF121212),
-    onSurface = Color(0xFFFFFFFF),
     error = Color(0xFFCF6679),
+    onPrimary = Color(0xFF000000),
+    onSecondary = Color(0xFF000000),
+    onBackground = Color(0xFFFFFFFF),
+    onSurface = Color(0xFFFFFFFF),
     onError = Color(0xFF000000)
 )
 
-// Tipografía por defecto de Material3
 val Typography = Typography()
 
-// Formas predeterminadas con esquinas redondeadas
+// ==== NUEVA LISTA DE COLORES VIBRANTES PARA GRÁFICOS ====
+val ChartColors = listOf(
+    Color(0xFF6ADDB0),
+    Color(0xFF00BCD4),
+    Color(0xFF8BC34A),
+    Color(0xFF2196F3),                     // Azul vibrante
+    Color(0xFF9C27B0),                     // Morado intenso
+    Color(0xFFFFB74D),                     // Naranja suave
+    Color(0xFFCF6679),                     // Rosa/error oscuro
+    Color(0xFF4CAF50)                      // Verde complementario
+)
+// ================================================
+
 val Shapes = Shapes(
-    small = RoundedCornerShape(4.dp),
+    small  = RoundedCornerShape(4.dp),
     medium = RoundedCornerShape(8.dp),
-    large = RoundedCornerShape(12.dp)
+    large  = RoundedCornerShape(12.dp)
 )
 
-// Composable que aplica el tema global
 @Composable
 fun MyFinanceTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) DarkColors else LightColors
-
     MaterialTheme(
         colorScheme = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
+        typography  = Typography,
+        shapes      = Shapes,
+        content     = content
     )
 }

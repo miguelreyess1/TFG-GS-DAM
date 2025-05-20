@@ -16,7 +16,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,10 +42,9 @@ fun PantallaTransacciones(navController: NavController) {
 
     var tipo by remember { mutableStateOf("gasto") }
     var cantidadText by remember { mutableStateOf("") }
-    var descripcionText by remember { mutableStateOf("") } // Nuevo estado para descripción
+    var descripcionText by remember { mutableStateOf("") }
     var categorias by remember { mutableStateOf<List<Categoria>>(emptyList()) }
     var seleccionada by remember { mutableStateOf<Categoria?>(null) }
-    val green = Color(0xFF62DBB1)
 
     LaunchedEffect(Unit) {
         categorias = catRepo.getAll()
@@ -59,7 +57,6 @@ fun PantallaTransacciones(navController: NavController) {
                 Categoria(nombre = "Ocio", tipo = "gasto"),
                 Categoria(nombre = "Salud", tipo = "gasto"),
                 Categoria(nombre = "Educación", tipo = "gasto"),
-
                 Categoria(nombre = "Nómina", tipo = "ingreso"),
                 Categoria(nombre = "Inversiones", tipo = "ingreso"),
                 Categoria(nombre = "Freelance", tipo = "ingreso"),
@@ -67,7 +64,6 @@ fun PantallaTransacciones(navController: NavController) {
                 Categoria(nombre = "Regalos", tipo = "ingreso"),
                 Categoria(nombre = "Reembolsos", tipo = "ingreso"),
                 Categoria(nombre = "Ahorros", tipo = "ingreso"),
-
                 Categoria(nombre = "Otros", tipo = "ambos")
             )
             ejemplos.forEach { catRepo.insert(it) }
@@ -75,50 +71,40 @@ fun PantallaTransacciones(navController: NavController) {
         }
     }
 
-    fun iconoPara(cat: Categoria): ImageVector = when (cat.nombre) {
-        "Alimentación" -> Icons.Filled.Fastfood
-        "Transporte" -> Icons.Filled.DirectionsCar
-        "Hogar" -> Icons.Filled.Home
-        "Compras" -> Icons.Filled.ShoppingBag
-        "Ocio" -> Icons.Filled.Movie
-        "Salud" -> Icons.Filled.Favorite
-        "Educación" -> Icons.Filled.School
-        "Nómina" -> Icons.Filled.AttachMoney
-        "Inversiones" -> Icons.AutoMirrored.Filled.TrendingUp
-        "Freelance" -> Icons.Filled.Work
-        "Alquiler" -> Icons.Filled.House
-        "Regalos" -> Icons.Filled.CardGiftcard
-        "Reembolsos" -> Icons.Filled.Replay
-        "Ahorros" -> Icons.Filled.Savings
-        else -> Icons.Filled.MoreHoriz
-    }
-
-    val visibles = remember(categorias, tipo) {
-        categorias.filter { cat ->
-            cat.tipo == "ambos" || cat.tipo == tipo
-        }
-    }
+    // Schemes from MaterialTheme
+    val primary = MaterialTheme.colorScheme.primary
+    val onPrimary = MaterialTheme.colorScheme.onPrimary
+    val background = MaterialTheme.colorScheme.background
+    val surface = MaterialTheme.colorScheme.surface
+    val onBackground = MaterialTheme.colorScheme.onBackground
+    val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
+    val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
 
     Scaffold(
         topBar = { Header() },
-        bottomBar = { BarraNavegacion(navController) }
+        bottomBar = { BarraNavegacion(navController) },
+        containerColor = background
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFAFAFA))
+                .background(background)
                 .padding(padding)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            // Selector de tipo
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 listOf("gasto" to "Gasto", "ingreso" to "Ingreso").forEach { (valStr, lbl) ->
                     val sel = tipo == valStr
                     Box(
-                        Modifier
+                        modifier = Modifier
                             .weight(1f)
                             .height(48.dp)
-                            .background(if (sel) green else Color.White, RoundedCornerShape(8.dp))
+                            .background(
+                                color = if (sel) primary else surface,
+                                shape = RoundedCornerShape(8.dp)
+                            )
                             .clickable {
                                 tipo = valStr
                                 seleccionada = null
@@ -126,73 +112,91 @@ fun PantallaTransacciones(navController: NavController) {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            lbl,
-                            color = if (sel) Color.White else Color.Black,
+                            text = lbl,
+                            color = if (sel) onPrimary else onBackground,
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
             }
 
+            // Descripción
             OutlinedTextField(
                 value = descripcionText,
                 onValueChange = { descripcionText = it },
                 label = { Text("Descripción") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = green,
-                    unfocusedBorderColor = Color.Gray
+                    focusedBorderColor = primary,
+                    unfocusedBorderColor = onSurfaceVariant,
+                    cursorColor = primary,
+                    containerColor = surface,
+                    focusedLabelColor = onBackground,
+                    unfocusedLabelColor = onSurfaceVariant
                 ),
                 singleLine = true
             )
 
-            Text("Categoría", style = MaterialTheme.typography.bodyLarge)
+            // Categorías
+            Text(text = "Categoría", style = MaterialTheme.typography.bodyLarge, color = onBackground)
             LazyVerticalGrid(
                 columns = GridCells.Fixed(4),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.height(240.dp)
             ) {
-                items(visibles) { cat ->
+                items(categorias.filter { it.tipo == "ambos" || it.tipo == tipo }) { cat ->
                     val sel = cat == seleccionada
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.clickable { seleccionada = cat }
                     ) {
                         Box(
-                            Modifier
+                            modifier = Modifier
                                 .size(56.dp)
-                                .background(if (sel) green else Color(0xFFF0F0F0), CircleShape),
+                                .background(
+                                    color = if (sel) primary else surfaceVariant,
+                                    shape = CircleShape
+                                ),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                iconoPara(cat),
+                                imageVector = iconoParaCategoria(cat.nombre),
                                 contentDescription = cat.nombre,
-                                modifier = Modifier.size(28.dp))
+                                modifier = Modifier.size(28.dp),
+                                tint = if (sel) onPrimary else primary
+                            )
                         }
                         Spacer(Modifier.height(4.dp))
-                        Text(cat.nombre, style = MaterialTheme.typography.bodySmall, maxLines = 1)
+                        Text(
+                            text = cat.nombre,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = onBackground,
+                            maxLines = 1
+                        )
                     }
                 }
             }
 
+            // Cantidad
             OutlinedTextField(
                 value = cantidadText,
-                onValueChange = { new ->
-                    if (new.matches(Regex("^\\d*\\.?\\d*$"))) {
-                        cantidadText = new
-                    }
-                },
+                onValueChange = { new -> if (new.matches(Regex("^\\d*\\.?\\d*$"))) cantidadText = new },
                 label = { Text("Cantidad") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = green,
-                    unfocusedBorderColor = Color.Gray
+                    focusedBorderColor = primary,
+                    unfocusedBorderColor = onSurfaceVariant,
+                    cursorColor = primary,
+                    containerColor = surface,
+                    focusedLabelColor = onBackground,
+                    unfocusedLabelColor = onSurfaceVariant
                 ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
+            // Botón añadir
             Button(
                 onClick = {
                     val monto = cantidadText.toDoubleOrNull() ?: return@Button
@@ -214,10 +218,31 @@ fun PantallaTransacciones(navController: NavController) {
                 },
                 enabled = seleccionada != null && cantidadText.toDoubleOrNull() != null && descripcionText.isNotEmpty(),
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = green)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = primary,
+                    contentColor = onPrimary
+                )
             ) {
-                Text("Añadir transacción", color = Color.White)
+                Text(text = "Añadir transacción")
             }
         }
     }
+}
+
+private fun iconoParaCategoria(nombre: String): ImageVector = when (nombre) {
+    "Alimentación" -> Icons.Filled.Fastfood
+    "Transporte" -> Icons.Filled.DirectionsCar
+    "Hogar" -> Icons.Filled.Home
+    "Compras" -> Icons.Filled.ShoppingBag
+    "Ocio" -> Icons.Filled.Movie
+    "Salud" -> Icons.Filled.Favorite
+    "Educación" -> Icons.Filled.School
+    "Nómina" -> Icons.Filled.AttachMoney
+    "Inversiones" -> Icons.AutoMirrored.Filled.TrendingUp
+    "Freelance" -> Icons.Filled.Work
+    "Alquiler" -> Icons.Filled.House
+    "Regalos" -> Icons.Filled.CardGiftcard
+    "Reembolsos" -> Icons.Filled.Replay
+    "Ahorros" -> Icons.Filled.Savings
+    else -> Icons.Filled.MoreHoriz
 }

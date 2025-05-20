@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
                     composable("perfil") {
                         PantallaPerfil(
                             navController   = navController,
-                            isDarkTheme     = isDarkTheme,
                             onToggleTheme   = { themeViewModel.toggleTheme(it) }
                         )
                     }
