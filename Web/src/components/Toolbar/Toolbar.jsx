@@ -12,16 +12,6 @@ export default function Toolbar() {
             <FaGithub />
         </a>
       </div>
-      <div className="toolbar-btn">
-        <FaMoon />
-      </div>
-      <div className="toolbar-btn">
-        <img
-          src="/es.png"
-          alt="Idioma"
-          className="toolbar-flag"
-        />
-      </div>
     </div>
   );
 }

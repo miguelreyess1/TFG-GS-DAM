@@ -18,7 +18,6 @@ export default function Navbar() {
           <ul className="nav-links">
             <li><Link to="/"><FaHome /> Inicio</Link></li>
             <li><Link to="/caracteristicas"><FaStar /> Características</Link></li>
-            <li><Link to="/demo"><FaGamepad /> Demo</Link></li>
             <li><Link to="/descarga"><FaDownload /> Descarga</Link></li>
             <li><Link to="/contacto"><FaEnvelope /> Contacto</Link></li>
           </ul>

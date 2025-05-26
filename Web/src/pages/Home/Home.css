@@ -10,11 +10,13 @@
   left: 40%;               
   transform: translate(-50%, -50%);
   text-align: center;
+  color: #fff !important;
 }
 
 .home-content h1 {
   font-size: 4rem;
   margin: 3rem 0;
+  color: fff !important;
 }
 
 .home-content h2 {

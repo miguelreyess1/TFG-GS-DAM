@@ -4,12 +4,6 @@ import android.app.Application
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,58 +36,75 @@ import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.ui.graphics.Color
 
+/**
+ * Pantalla de perfil de usuario que permite ver y editar nombre e imagen,
+ * además de cambiar el tema de la aplicación.
+ *
+ * @param navController Controlador de navegación para la barra inferior.
+ * @param onToggleTheme Callback para alternar entre tema claro (false) y oscuro (true).
+ */
 @Composable
 fun PantallaPerfil(
     navController: NavController,
     onToggleTheme: (Boolean) -> Unit
 ) {
+    // Contexto de la aplicación para ViewModel
     val context = LocalContext.current.applicationContext as Application
+
+    // ViewModel que maneja el estado del usuario
     val usuarioViewModel: UsuarioViewModel = viewModel(
         factory = UsuarioViewModelFactory(context)
     )
-    // Estado del perfil
+    // Estado de perfil que expone nombre e imagen guardados
     val profileState by usuarioViewModel.profileState.collectAsState()
 
-    // Estados de UI
+    // Modos de UI: edición o visualización
     var isEditing by rememberSaveable { mutableStateOf(false) }
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    // Nombre en edición, inicializado con el nombre actual
     var editingName by rememberSaveable { mutableStateOf(profileState?.nombre.orEmpty()) }
 
+    // Cuando cambia profileState.nombre y no estamos editando, actualizamos editingName
     LaunchedEffect(profileState?.nombre) {
         if (!isEditing) {
             editingName = profileState?.nombre.orEmpty()
         }
     }
 
-    // Selector de imágenes
+    // Launcher para seleccionar imagen de galería
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? -> imageUri = uri }
+    ) { uri: Uri? ->
+        imageUri = uri  // Actualiza URI al seleccionar imagen
+    }
 
     Scaffold(
-        topBar = { Header() },
-        bottomBar = { BarraNavegacion(navController) },
+        topBar = { Header() },                            // Cabecera con logo y título
+        bottomBar = { BarraNavegacion(navController) },  // Navegación inferior
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(padding)
+                .padding(padding)                        // Ajusta por Scaffold
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(24.dp),                        // Espaciado interno
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
+            // Composable que muestra/avatar de perfil y botón de selección
             ProfileImage(
-                imageUri = imageUri,
-                isEditing = isEditing,
+                imageUri     = imageUri,
+                isEditing    = isEditing,
                 onImageSelect = { launcher.launch("image/*") }
             )
 
             if (isEditing) {
+                // Sección de edición: input para nombre y botón guardar
                 EditProfileSection(
-                    userName = editingName,
+                    userName     = editingName,
                     onNameChange = { editingName = it },
-                    onSave = {
+                    onSave       = {
+                        // Guarda cambios en ViewModel y sale de modo edición
                         usuarioViewModel.saveProfile(
                             editingName,
                             imageUri?.toString()
@@ -102,19 +113,21 @@ fun PantallaPerfil(
                     }
                 )
             } else {
+                // Sección de visualización: muestra nombre y botón editar
                 ViewProfileSection(
                     userName = profileState?.nombre.orEmpty(),
-                    onEdit = { isEditing = true }
+                    onEdit   = { isEditing = true }
                 )
             }
 
+            // Botones para alternar tema claro/oscuro
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
             ) {
-                // Botón “Claro” con sol
+                // Botón Tema Claro
                 Button(
                     onClick = { onToggleTheme(false) },
                     modifier = Modifier
@@ -128,7 +141,7 @@ fun PantallaPerfil(
                         ),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
-                        contentColor = MaterialTheme.colorScheme.primary
+                        contentColor   = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Icon(
@@ -138,7 +151,7 @@ fun PantallaPerfil(
                     )
                 }
 
-                // Botón “Oscuro” con luna
+                // Botón Tema Oscuro
                 Button(
                     onClick = { onToggleTheme(true) },
                     modifier = Modifier
@@ -152,7 +165,7 @@ fun PantallaPerfil(
                         ),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF121212),
-                        contentColor = MaterialTheme.colorScheme.primary
+                        contentColor   = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Icon(
@@ -166,28 +179,39 @@ fun PantallaPerfil(
     }
 }
 
+/**
+ * Composable que muestra la imagen de perfil del usuario en un contenedor circular.
+ * Permite seleccionar una nueva imagen si está en modo edición.
+ *
+ * @param imageUri     URI de la imagen de perfil; si es null, muestra un icono por defecto.
+ * @param isEditing    Indica si se permite cambiar la imagen pulsando sobre el avatar.
+ * @param onImageSelect Callback que se invoca al pulsar el contenedor en modo edición.
+ */
 @Composable
 private fun ProfileImage(
     imageUri: Uri?,
     isEditing: Boolean,
     onImageSelect: () -> Unit
 ) {
+    // Caja cuadrada que actúa como botón circular cuando isEditing == true
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(128.dp)
-            .clip(CircleShape)
-            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-            .clickable(enabled = isEditing) { onImageSelect() }
+            .size(128.dp)                                         // Tamaño fijo del avatar
+            .clip(CircleShape)                                    // Recorta en forma de círculo
+            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)  // Borde del círculo
+            .clickable(enabled = isEditing) { onImageSelect() }   // Solo clicable en edición
     ) {
         if (imageUri != null) {
+            // Si hay URI, cargamos y mostramos la imagen recortada
             Image(
                 painter = rememberAsyncImagePainter(imageUri),
                 contentDescription = "Foto de perfil",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize()               // Ocupa el contenedor entero
             )
         } else {
+            // Si no hay imagen, mostramos un icono de usuario
             Icon(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = "Avatar",
@@ -197,20 +221,29 @@ private fun ProfileImage(
         }
 
         if (isEditing) {
+            // Indicador de cámara en la esquina inferior derecha para invitar a cambiar foto
             Icon(
                 imageVector = Icons.Default.CameraAlt,
                 contentDescription = "Cambiar foto",
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
-                    .padding(6.dp)
+                    .align(Alignment.BottomEnd)                  // Posicionado en esquina
+                    .background(MaterialTheme.colorScheme.primary, CircleShape) // Fondo circular
+                    .padding(6.dp)                                // Espacio alrededor del icono
             )
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Sección de edición de perfil que permite al usuario cambiar su nombre
+ * y guardar los cambios.
+ *
+ * @param userName     Texto actual del nombre en el campo de edición.
+ * @param onNameChange Callback que se invoca al modificar el texto del nombre.
+ * @param onSave       Callback que se invoca al pulsar el botón de guardar.
+ */
 @Composable
 private fun EditProfileSection(
     userName: String,
@@ -218,43 +251,56 @@ private fun EditProfileSection(
     onSave: () -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.spacedBy(16.dp),      // Espacio entre elementos
+        horizontalAlignment = Alignment.CenterHorizontally       // Centra horizontalmente
     ) {
+        // Campo de texto para editar el nombre de usuario
         OutlinedTextField(
-            value = userName,
-            onValueChange = onNameChange,
-            label = { Text("Tu nombre") },
-            leadingIcon = { Icon(Icons.Default.Edit, contentDescription = "Nombre") },
-            singleLine = true,
+            value = userName,                                  // Valor mostrado
+            onValueChange = onNameChange,                      // Actualiza estado externo
+            label = { Text("Tu nombre") },                     // Etiqueta flotante
+            leadingIcon = {                                   // Icono a la izquierda
+                Icon(Icons.Default.Edit, contentDescription = "Nombre")
+            },
+            singleLine = true,                                 // Una sola línea de entrada
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                cursorColor = MaterialTheme.colorScheme.primary
+                focusedBorderColor = MaterialTheme.colorScheme.primary,  // Borde al enfocar
+                cursorColor = MaterialTheme.colorScheme.primary          // Color del cursor
             )
         )
 
+        // Botón para guardar los cambios, habilitado solo si el nombre no está vacío
         Button(
             onClick = onSave,
             enabled = userName.isNotBlank(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                containerColor = MaterialTheme.colorScheme.primary,      // Fondo del botón
+                contentColor = MaterialTheme.colorScheme.onPrimary       // Color del texto
             )
         ) {
-            Text("Guardar cambios")
+            Text("Guardar cambios")                                 // Texto del botón
         }
     }
 }
 
+/**
+ * Sección de visualización del perfil que muestra el nombre del usuario
+ * y un botón para pasar al modo edición.
+ *
+ * @param userName Texto con el nombre actual del usuario.
+ * @param onEdit   Callback que se invoca al pulsar el botón de editar.
+ */
 @Composable
 private fun ViewProfileSection(
     userName: String,
     onEdit: () -> Unit
 ) {
     Column(
+        // Separación uniforme entre elementos y centrado horizontal
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Muestra el nombre del usuario con estilo destacado
         Text(
             text = userName,
             style = MaterialTheme.typography.headlineMedium,
@@ -262,15 +308,19 @@ private fun ViewProfileSection(
             color = MaterialTheme.colorScheme.onBackground
         )
 
+        // Botón tonal para iniciar la edición del perfil
         FilledTonalButton(
             onClick = onEdit,
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                containerColor = MaterialTheme.colorScheme.primary,    // Fondo del botón
+                contentColor = MaterialTheme.colorScheme.onPrimary     // Color del texto e ícono
             )
         ) {
-            Icon(Icons.Default.Edit, contentDescription = "Editar")
-            Spacer(Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Editar perfil"
+            )
+            Spacer(Modifier.width(8.dp))  // Espacio entre ícono y texto
             Text("Editar perfil")
         }
     }
