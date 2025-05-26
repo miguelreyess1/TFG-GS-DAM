@@ -10,7 +10,7 @@ export default function Toolbar() {
             target="_blank"
             rel="noopener noreferrer">
             <FaGithub />
-        </a>
+        </a> 
       </div>
     </div>
   );
