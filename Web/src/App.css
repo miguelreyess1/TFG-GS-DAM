@@ -627,59 +627,209 @@ html {
   color: var(--text-muted);
 }
 
-/* Responsive Design */
-@media (min-width: 768px) {
-  .nav-desktop {
-    display: flex;
+/* Mejoras para responsividad móvil */
+@media (max-width: 480px) {
+  /* Ajustes generales */
+  body {
+    font-size: 14px;
   }
   
-  .nav-mobile-toggle {
-    display: none;
+  /* Navegación */
+  .nav-content {
+    height: 3.5rem;
   }
   
-  .hero-title {
-    font-size: 6rem;
+  .logo-text {
+    font-size: 1.2rem;
   }
   
-  .hero-subtitle {
-    font-size: 2.5rem;
+  .mobile-menu-btn {
+    padding: 0.3rem;
   }
   
-  .hero-buttons {
-    flex-direction: row;
-  }
-  
-  .section-title {
-    font-size: 4rem;
-  }
-  
-  .contact-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .scroll-reveal {
-    transform: translateY(20px);
+  /* Hero Section */
+  .hero-section {
+    padding-top: 3.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
   .hero-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
   }
   
   .hero-subtitle {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  /* Features Section */
+  .features-section, 
+  .download-section, 
+  .contact-section {
+    padding: 3rem 1rem;
   }
   
   .section-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
+    margin-bottom: 1rem;
   }
   
-  .contact-grid {
+  .section-description {
+    font-size: 1rem;
+  }
+  
+  .features-grid {
     grid-template-columns: 1fr;
   }
   
+  .feature-card {
+    padding: 1rem;
+  }
+  
+  .feature-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+  
+  /* Download Section */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .download-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+  
+  /* Contact Section */
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
   .contact-card {
-    min-width: unset;
+    padding: 1.5rem 1rem;
+  }
+  
+  .social-links {
+    gap: 1rem;
+  }
+  
+  .social-link {
+    padding: 0.75rem;
+  }
+  
+  .contact-cta-btn {
+    width: 100%;
+  }
+}
+
+/* Ajustes para tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .btn-primary, .btn-secondary {
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .feature-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .contact-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .contact-icon {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Ajustes para orientación horizontal en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-section {
+    padding: 5rem 1rem 2rem;
+    min-height: auto;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .hero-description {
+    margin-bottom: 1rem;
+  }
+  
+  .features-section,
+  .download-section,
+  .contact-section {
+    min-height: auto;
+    padding: 2rem 1rem;
+  }
+}
+
+/* Mejoras para la accesibilidad táctil */
+@media (hover: none) {
+  .nav-item,
+  .nav-mobile-item,
+  .btn-primary,
+  .btn-secondary,
+  .contact-item,
+  .social-link,
+  .download-btn,
+  .contact-cta-btn {
+    padding: 0.75rem 1rem; /* Botones más grandes para tocar */
+  }
+  
+  .social-link {
+    margin: 0 0.5rem;
+  }
+}
+
+/* Ajustes para dispositivos de alta densidad de píxeles */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .feature-icon svg,
+  .contact-icon svg {
+    stroke-width: 1.5px; /* Líneas más gruesas para mejor visualización */
   }
 }

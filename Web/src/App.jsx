@@ -110,10 +110,25 @@ const LinkedInIcon = () => (
   </svg>
 );
 
+// Hook personalizado para detectar el ancho de la ventana
+function useViewportWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+  
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  return width;
+}
+
 function App() {
   const [downloadCount, setDownloadCount] = useState(0);
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const viewportWidth = useViewportWidth();
+  const isMobile = viewportWidth < 768;
   
   // Crear refs individuales para cada sección
   const homeRef = useRef(null);
@@ -165,11 +180,34 @@ function App() {
     };
   }, []);
 
+  // Efecto para cerrar el menú móvil al hacer clic fuera
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      const handleClickOutside = (e) => {
+        if (!e.target.closest('.navbar')) {
+          setMobileMenuOpen(false);
+        }
+      };
+      
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [mobileMenuOpen]);
+
+  // Función mejorada para scroll con mejor experiencia en móvil
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setMobileMenuOpen(false);
+      // Añade un pequeño retraso en móviles para mejor experiencia
+      if (isMobile) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth" });
+          setMobileMenuOpen(false);
+        }, 100);
+      } else {
+        element.scrollIntoView({ behavior: "smooth" });
+        setMobileMenuOpen(false);
+      }
     }
   };
 
@@ -287,7 +325,11 @@ function App() {
 
             {/* Mobile Menu Button */}
             <div className="nav-mobile-toggle">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="mobile-menu-btn">
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+                className="mobile-menu-btn"
+                aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+              >
                 {mobileMenuOpen ? <TimesIcon /> : <BarsIcon />}
               </button>
             </div>
@@ -339,9 +381,6 @@ function App() {
       <section id="features" ref={featuresRef} className="features-section scroll-reveal">
         <div className="section-container">
           <div className="section-header">
-            <div className="section-badge">
-              <span>✨ Características</span>
-            </div>
             <h2 className="section-title">Características Destacadas</h2>
             <p className="section-description">
               Descubre todo lo que MyFinance ofrece para gestionar tus finanzas sin complicaciones.
@@ -410,9 +449,6 @@ function App() {
       <section id="contact" ref={contactRef} className="contact-section scroll-reveal">
         <div className="section-container">
           <div className="section-header">
-            <div className="section-badge">
-              <span>📞 Contacto</span>
-            </div>
             <h2 className="section-title">¡Conectemos!</h2>
             <p className="section-description">
               ¿Tienes una idea increíble? ¿Necesitas ayuda? ¡Me encantaría colaborar contigo!
@@ -470,7 +506,7 @@ function App() {
       {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
-          <p>© 2024 MyFinance. Desarrollado con ❤️ por Miguel Reyes</p>
+          <p>© 2024 MyFinance. Desarrollado por Miguel Reyes Gómez</p>
         </div>
       </footer>
     </div>
