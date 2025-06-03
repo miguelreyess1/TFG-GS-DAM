@@ -155,30 +155,61 @@ function App() {
       });
     }, 50);
 
-    // Intersection Observer para animaciones de scroll y navegación activa
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-in");
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.3, rootMargin: "0px 0px -200px 0px" },
-    );
+    // Intersection Observer SOLO para desktop (no móvil)
+    if (!isMobile) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("animate-in");
+              setActiveSection(entry.target.id);
+            }
+          });
+        },
+        { threshold: 0.3, rootMargin: "0px 0px -200px 0px" },
+      );
 
-    // Observar todas las secciones
-    const sections = [homeRef.current, featuresRef.current, downloadRef.current, contactRef.current];
-    sections.forEach((section) => {
-      if (section) observer.observe(section);
-    });
+      // Observar todas las secciones
+      const sections = [homeRef.current, featuresRef.current, downloadRef.current, contactRef.current];
+      sections.forEach((section) => {
+        if (section) observer.observe(section);
+      });
 
-    return () => {
-      clearInterval(timer);
-      observer.disconnect();
-    };
-  }, []);
+      return () => {
+        clearInterval(timer);
+        observer.disconnect();
+      };
+    } else {
+      // En móvil, mostrar todas las secciones inmediatamente
+      const sections = [homeRef.current, featuresRef.current, downloadRef.current, contactRef.current];
+      sections.forEach((section) => {
+        if (section) {
+          section.classList.add("animate-in");
+        }
+      });
+
+      // Observer simple solo para navegación activa en móvil
+      const simpleObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(entry.target.id);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      sections.forEach((section) => {
+        if (section) simpleObserver.observe(section);
+      });
+
+      return () => {
+        clearInterval(timer);
+        simpleObserver.disconnect();
+      };
+    }
+  }, [isMobile]);
 
   // Efecto para cerrar el menú móvil al hacer clic fuera
   useEffect(() => {
@@ -296,6 +327,11 @@ function App() {
     },
   ];
 
+  // Función para determinar la clase CSS según el dispositivo
+  const getSectionClass = (baseClass) => {
+    return isMobile ? `${baseClass} mobile-visible` : `${baseClass} scroll-reveal`;
+  };
+
   return (
     <div className="app">
       {/* Navigation Bar */}
@@ -354,7 +390,7 @@ function App() {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" ref={homeRef} className="hero-section scroll-reveal">
+      <section id="home" ref={homeRef} className={getSectionClass("hero-section")}>
         <div className="hero-content">
           <h1 className="hero-title">
             My<span className="title-highlight">Finance</span>
@@ -378,7 +414,7 @@ function App() {
       <div className="section-separator"></div>
 
       {/* Features Section */}
-      <section id="features" ref={featuresRef} className="features-section scroll-reveal">
+      <section id="features" ref={featuresRef} className={getSectionClass("features-section")}>
         <div className="section-container">
           <div className="section-header">
             <h2 className="section-title">Características Destacadas</h2>
@@ -402,7 +438,7 @@ function App() {
       <div className="section-separator"></div>
 
       {/* Download Section */}
-      <section id="download" ref={downloadRef} className="download-section scroll-reveal">
+      <section id="download" ref={downloadRef} className={getSectionClass("download-section")}>
         <div className="section-container">
           <div className="download-badge">
             <DownloadIcon />
@@ -446,7 +482,7 @@ function App() {
       <div className="section-separator"></div>
 
       {/* Contact Section */}
-      <section id="contact" ref={contactRef} className="contact-section scroll-reveal">
+      <section id="contact" ref={contactRef} className={getSectionClass("contact-section")}>
         <div className="section-container">
           <div className="section-header">
             <h2 className="section-title">¡Conectemos!</h2>
@@ -506,7 +542,7 @@ function App() {
       {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
-          <p>© 2024 MyFinance. Desarrollado por Miguel Reyes Gómez</p>
+          <p>© 2025 MyFinance. Desarrollado por Miguel Reyes Gómez</p>
         </div>
       </footer>
     </div>

@@ -623,6 +623,11 @@ html {
   text-align: center;
 }
 
+.mobile-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
 .footer-content p {
   color: var(--text-muted);
 }
