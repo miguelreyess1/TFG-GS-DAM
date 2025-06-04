@@ -169,11 +169,11 @@ const ToolIcon = () => (
 
 // Hook personalizado para detectar el ancho de la ventana
 function useViewportWidth() {
-  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+  const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    
+    if (typeof window === "undefined") return
+
     const handleResize = () => setWidth(window.innerWidth)
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
@@ -367,8 +367,6 @@ const translations = {
       developedBy: "TFG desarrollado por",
     },
     languageSwitcher: "EN",
-    presentationMode: "Modo Presentación",
-    exitPresentation: "Salir de Presentación",
   },
   en: {
     nav: {
@@ -552,7 +550,6 @@ const translations = {
     },
     languageSwitcher: "ES",
     presentationMode: "Presentation Mode",
-    exitPresentation: "Exit Presentation",
   },
 }
 
@@ -801,13 +798,10 @@ function App() {
     return (
       <div className="app presentation-mode">
         {/* Controles de idioma y presentación */}
-        <div className="fixed top-4 right-4 z-50 flex gap-2">
-          <button onClick={toggleLanguage} className="language-switcher">
+        <div className="fixed top-10 right-6 z-50 flex gap-3">
+          <button onClick={toggleLanguage} className="language-switcher-prominent">
             <GlobeIcon />
             <span>{t.languageSwitcher}</span>
-          </button>
-          <button onClick={togglePresentationMode} className="presentation-mode-btn">
-            {t.exitPresentation}
           </button>
         </div>
 
@@ -1106,13 +1100,10 @@ function App() {
   return (
     <div className="app">
       {/* Controles de idioma y presentación */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
-        <button onClick={toggleLanguage} className="language-switcher">
+      <div className="fixed top-6 right-6 z-50 flex gap-3">
+        <button onClick={toggleLanguage} className="language-switcher-prominent">
           <GlobeIcon />
           <span>{t.languageSwitcher}</span>
-        </button>
-        <button onClick={togglePresentationMode} className="presentation-mode-btn">
-          {t.presentationMode}
         </button>
       </div>
 

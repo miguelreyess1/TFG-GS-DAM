@@ -141,14 +141,15 @@ html {
 /* Controles superiores mejorados */
 .fixed {
   position: fixed;
+  margin-top: 4rem;
 }
 
-.top-4 {
-  top: 1rem;
+.top-6 {
+  top: 1.5rem;
 }
 
-.right-4 {
-  right: 1rem;
+.right-6 {
+  right: 1.5rem;
 }
 
 .z-50 {
@@ -159,8 +160,8 @@ html {
   display: flex;
 }
 
-.gap-2 {
-  gap: 0.5rem;
+.gap-3 {
+  gap: 0.75rem;
 }
 
 .language-switcher {
@@ -185,6 +186,37 @@ html {
   border-color: rgba(16, 185, 129, 0.3);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
+}
+
+.language-switcher-prominent {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  backdrop-filter: blur(16px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.language-switcher-prominent:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.language-switcher-prominent svg {
+  width: 20px;
+  height: 20px;
 }
 
 .presentation-mode-btn {
