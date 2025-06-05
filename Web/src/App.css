@@ -24,6 +24,12 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
+svg {
+  width: 36px;
+  height: 36px;
+  fill: currentColor;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;
@@ -327,7 +333,7 @@ html {
 
 .nav-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin-left: 5rem;
   padding: 0 1.5rem;
 }
 
@@ -339,6 +345,7 @@ html {
 }
 
 .logo-text {
+  margin-right: 1.2rem;
   font-size: 1.5rem;
   font-weight: bold;
   letter-spacing: -0.025em;
@@ -357,7 +364,13 @@ html {
   gap: 1rem;
 }
 
+.bandera {
+  height: auto !important;
+  width: 4rem !important;
+}
+
 .nav-item {
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -552,7 +565,7 @@ html {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(211, 252, 213, 0.2), transparent);
   transition: left 0.5s ease;
 }
 
@@ -683,7 +696,7 @@ html {
   font-size: 1.25rem;
   color: var(--text-muted);
   max-width: 48rem;
-  margin: 0 auto;
+  margin-bottom: 2rem;
   line-height: 1.6;
 }
 
@@ -1871,8 +1884,6 @@ html {
 .download-btn,
 .contact-cta-btn {
   background-size: 200px 100%;
-  background-image: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  background-repeat: no-repeat;
   background-position: -200px 0;
 }
 

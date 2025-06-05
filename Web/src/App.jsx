@@ -198,9 +198,8 @@ const translations = {
     hero: {
       subtitle: "Tus finanzas sin límites",
       description:
-        "Trabajo de Fin de Grado - Aplicación móvil que ofrece una solución integral para la gestión de finanzas personales, combinando una interfaz intuitiva con funcionalidades avanzadas.",
+        "MyFinance es una aplicación móvil desarrollada para el Trabajo de Fin de Grado, cuyo objetivo principal es facilitar el control financiero personal de forma práctica, accesible e intuitiva.",
       downloadButton: "Descargar Aplicación",
-      featuresButton: "Ver Características",
     },
     motivation: {
       badge: "Motivación del Proyecto",
@@ -210,7 +209,7 @@ const translations = {
       personal: {
         title: "Motivación Personal",
         description:
-          "Mi motivación surge de mi inquietud por profundizar en Kotlin y Jetpack Compose, ambos los descubrí durante el ciclo y me resultaron muy atractivos para el desarrollo móvil. Al pensar en el tema de mi TFG, me resultó muy fácil elegirlo: el mundo de las finanzas personales siempre me ha llamado la atención. Quise unir ambas pasiones en una sola aplicación.",
+          "Mi motivación surge de mi inquietud por profundizar en Kotlin y Jetpack Compose, ambos los descubrí durante el ciclo y me resultaron muy atractivos para el desarrollo móvil. Al pensar en el tema de mi TFG, me resultó muy fácil elegirlo. El mundo de las finanzas personales siempre me ha llamado la atención y quise unir ambas pasiones en una sola aplicación.",
       },
       professional: {
         title: "Motivación Profesional",
@@ -220,7 +219,7 @@ const translations = {
       impact: {
         title: "Impacto Esperado",
         description:
-          "Desarrollar una aplicación que realmente ayude a las personas a gestionar sus finanzas de manera sencilla, segura y efectiva, sin depender de servicios en la nube.",
+          "Desarrollar una aplicación que realmente ayude a las personas a gestionar sus finanzas de manera sencilla, segura y efectiva.",
       },
     },
     objectives: {
@@ -273,12 +272,7 @@ const translations = {
       satisfaction: {
         title: "Satisfacción con el Resultado",
         description:
-          "El proyecto ha superado las expectativas iniciales, logrando una aplicación robusta que combina exitosamente tecnología moderna con utilidad práctica para la gestión financiera personal.",
-      },
-      future: {
-        title: "Desarrollos Futuros",
-        description:
-          "Planeo implementar sincronización opcional en la nube, más tipos de gráficos, exportación de datos, y un sistema de consejos financieros basado en patrones de gasto del usuario.",
+          "El proyecto ha cumplidao con las expectativas, logrando una aplicación robusta que combina exitosamente tecnología moderna con utilidad práctica para la gestión financiera personal.",
       },
       impact: {
         title: "Impacto Profesional",
@@ -296,12 +290,12 @@ const translations = {
           desc: "Visualización automática del balance actualizado con cada transacción registrada.",
         },
         {
-          title: "Registro Completo",
+          title: "Sistema de Trasacciones",
           desc: "Sistema de registro de ingresos y gastos con fecha, descripción y categorización automática.",
         },
         {
-          title: "Categorización Avanzada",
-          desc: "Organización inteligente de transacciones con categorías predefinidas y personalizables.",
+          title: "Categorización",
+          desc: "Organización inteligente de transacciones con categorías predefinidas.",
         },
         {
           title: "Historial Detallado",
@@ -366,7 +360,7 @@ const translations = {
     footer: {
       developedBy: "TFG desarrollado por",
     },
-    languageSwitcher: "EN",
+    languageSwitcher: "/spain.png",
   },
   en: {
     nav: {
@@ -382,9 +376,8 @@ const translations = {
     hero: {
       subtitle: "Your finances without limits",
       description:
-        "Final Degree Project - Mobile application that offers a comprehensive solution for personal finance management, combining an intuitive interface with advanced features.",
+        "MyFinance is a mobile application developed for the Final Degree Project, whose main objective is to facilitate personal financial management in a practical, accessible and intuitive way.",
       downloadButton: "Download Application",
-      featuresButton: "View Features",
     },
     motivation: {
       badge: "Project Motivation",
@@ -403,7 +396,7 @@ const translations = {
       impact: {
         title: "Expected Impact",
         description:
-          "Develop an application that truly helps people manage their finances simply, securely and effectively, without depending on cloud services.",
+          "Develop an application that truly helps people manage their finances simply, securely and effectively.",
       },
     },
     objectives: {
@@ -458,11 +451,6 @@ const translations = {
         description:
           "The project has exceeded initial expectations, achieving a robust application that successfully combines modern technology with practical utility for personal financial management.",
       },
-      future: {
-        title: "Future Developments",
-        description:
-          "I plan to implement optional cloud synchronization, more chart types, data export, and a financial advice system based on the user's spending patterns.",
-      },
       impact: {
         title: "Professional Impact",
         description:
@@ -478,20 +466,20 @@ const translations = {
           desc: "Automatic visualization of updated balance with each registered transaction.",
         },
         {
-          title: "Complete Registration",
+          title: "Transaction System",
           desc: "Income and expense registration system with date, description and automatic categorization.",
         },
         {
-          title: "Advanced Categorization",
-          desc: "Intelligent organization of transactions with predefined and customizable categories.",
+          title: "Categorization",
+          desc: "Intelligent organization of transactions with predefined categories.",
         },
         {
           title: "Detailed History",
-          desc: "Complete access to transaction history with filters and advanced search.",
+          desc: "Complete access to transaction history with filters.",
         },
         {
           title: "Interactive Charts",
-          desc: "Financial data visualization with dynamic charts and trend analysis.",
+          desc: "Financial data visualization with dynamic charts.",
         },
         {
           title: "Interest Calculator",
@@ -499,7 +487,7 @@ const translations = {
         },
         {
           title: "Dual Mode",
-          desc: "Adaptable interface with light and dark mode, with preference persistence.",
+          desc: "Adaptable interface with light and dark mode.",
         },
         {
           title: "Total Privacy",
@@ -548,8 +536,7 @@ const translations = {
     footer: {
       developedBy: "Final project developed by",
     },
-    languageSwitcher: "ES",
-    presentationMode: "Presentation Mode",
+    languageSwitcher: "/english.png",
   },
 }
 
@@ -800,8 +787,7 @@ function App() {
         {/* Controles de idioma y presentación */}
         <div className="fixed top-10 right-6 z-50 flex gap-3">
           <button onClick={toggleLanguage} className="language-switcher-prominent">
-            <GlobeIcon />
-            <span>{t.languageSwitcher}</span>
+            <img src={t.languageSwitcher} alt="Bandera del idioma" style={{ width: '36px', height: 'auto' }} />
           </button>
         </div>
 
@@ -940,14 +926,6 @@ function App() {
                   </div>
                   <h3 className="conclusion-card-title">{t.conclusion.satisfaction.title}</h3>
                   <p className="conclusion-card-desc">{t.conclusion.satisfaction.description}</p>
-                </div>
-
-                <div className="conclusion-card">
-                  <div className="conclusion-icon">
-                    <ArrowUpRightIcon />
-                  </div>
-                  <h3 className="conclusion-card-title">{t.conclusion.future.title}</h3>
-                  <p className="conclusion-card-desc">{t.conclusion.future.description}</p>
                 </div>
 
                 <div className="conclusion-card">
@@ -1102,8 +1080,7 @@ function App() {
       {/* Controles de idioma y presentación */}
       <div className="fixed top-6 right-6 z-50 flex gap-3">
         <button onClick={toggleLanguage} className="language-switcher-prominent">
-          <GlobeIcon />
-          <span>{t.languageSwitcher}</span>
+          <img src={t.languageSwitcher} alt="Bandera del idioma" style={{ width: '36px', height: 'auto' }} />
         </button>
       </div>
 
@@ -1173,9 +1150,6 @@ function App() {
           <div className="hero-buttons">
             <button onClick={() => scrollToSection("download")} className="btn-primary">
               {t.hero.downloadButton}
-            </button>
-            <button onClick={() => scrollToSection("features")} className="btn-secondary">
-              {t.hero.featuresButton}
             </button>
           </div>
         </div>
@@ -1316,14 +1290,6 @@ function App() {
               </div>
               <h3 className="conclusion-card-title">{t.conclusion.satisfaction.title}</h3>
               <p className="conclusion-card-desc">{t.conclusion.satisfaction.description}</p>
-            </div>
-
-            <div className="conclusion-card">
-              <div className="conclusion-icon">
-                <ArrowUpRightIcon />
-              </div>
-              <h3 className="conclusion-card-title">{t.conclusion.future.title}</h3>
-              <p className="conclusion-card-desc">{t.conclusion.future.description}</p>
             </div>
 
             <div className="conclusion-card">
