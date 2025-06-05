@@ -190,8 +190,8 @@ const translations = {
       motivation: "Motivación",
       objectives: "Objetivos",
       proposal: "Propuesta",
-      conclusion: "Conclusión",
       features: "Características",
+      conclusion: "Conclusión",
       download: "Descarga",
       contact: "Contacto",
     },
@@ -265,22 +265,7 @@ const translations = {
         ],
       },
     },
-    conclusion: {
-      badge: "Conclusiones",
-      title: "Reflexiones y Futuro",
-      description: "Conclusiones del proyecto y perspectivas de desarrollo futuro.",
-      satisfaction: {
-        title: "Satisfacción con el Resultado",
-        description:
-          "El proyecto ha cumplidao con las expectativas, logrando una aplicación robusta que combina exitosamente tecnología moderna con utilidad práctica para la gestión financiera personal.",
-      },
-      impact: {
-        title: "Impacto Profesional",
-        description:
-          "Este TFG ha consolidado mis habilidades como desarrollador Android y me ha preparado para enfrentar proyectos complejos en el ámbito profesional.",
-      },
-    },
-    features: {
+        features: {
       title: "Características de MyFinance",
       description:
         "Funcionalidades principales que hacen de MyFinance una herramienta completa para la gestión financiera personal.",
@@ -318,6 +303,21 @@ const translations = {
           desc: "Almacenamiento local con SQLite, sin dependencia de servicios en la nube.",
         },
       ],
+    },
+    conclusion: {
+      badge: "Conclusiones",
+      title: "Reflexiones y Futuro",
+      description: "Conclusiones del proyecto y perspectivas de desarrollo futuro.",
+      satisfaction: {
+        title: "Satisfacción con el Resultado",
+        description:
+          "El proyecto ha cumplidao con las expectativas, logrando una aplicación robusta que combina exitosamente tecnología moderna con utilidad práctica para la gestión financiera personal.",
+      },
+      impact: {
+        title: "Impacto Profesional",
+        description:
+          "Este TFG ha consolidado mis habilidades como desarrollador Android y me ha preparado para enfrentar proyectos complejos en el ámbito profesional.",
+      },
     },
     download: {
       badge: "Aplicación Disponible",
@@ -368,8 +368,8 @@ const translations = {
       motivation: "Motivation",
       objectives: "Objectives",
       proposal: "Proposal",
-      conclusion: "Conclusion",
       features: "Features",
+      conclusion: "Conclusion",
       download: "Download",
       contact: "Contact",
     },
@@ -442,22 +442,7 @@ const translations = {
         ],
       },
     },
-    conclusion: {
-      badge: "Conclusions",
-      title: "Reflections and Future",
-      description: "Project conclusions and future development perspectives.",
-      satisfaction: {
-        title: "Satisfaction with the Result",
-        description:
-          "The project has exceeded initial expectations, achieving a robust application that successfully combines modern technology with practical utility for personal financial management.",
-      },
-      impact: {
-        title: "Professional Impact",
-        description:
-          "This Final Project has consolidated my skills as an Android developer and prepared me to face complex projects in the professional field.",
-      },
-    },
-    features: {
+        features: {
       title: "MyFinance Features",
       description: "Main functionalities that make MyFinance a complete tool for personal financial management.",
       items: [
@@ -494,6 +479,21 @@ const translations = {
           desc: "Local storage with SQLite, without dependency on cloud services.",
         },
       ],
+    },
+    conclusion: {
+      badge: "Conclusions",
+      title: "Reflections and Future",
+      description: "Project conclusions and future development perspectives.",
+      satisfaction: {
+        title: "Satisfaction with the Result",
+        description:
+          "The project has exceeded initial expectations, achieving a robust application that successfully combines modern technology with practical utility for personal financial management.",
+      },
+      impact: {
+        title: "Professional Impact",
+        description:
+          "This Final Project has consolidated my skills as an Android developer and prepared me to face complex projects in the professional field.",
+      },
     },
     download: {
       badge: "Application Available",
@@ -569,8 +569,8 @@ function App() {
     { id: "motivation", label: t.nav.motivation, icon: LightbulbIcon },
     { id: "objectives", label: t.nav.objectives, icon: TargetIcon },
     { id: "proposal", label: t.nav.proposal, icon: StarIcon },
-    { id: "conclusion", label: t.nav.conclusion, icon: ThumbsUpIcon },
     { id: "features", label: t.nav.features, icon: StarIcon },
+    { id: "conclusion", label: t.nav.conclusion, icon: ThumbsUpIcon },
     { id: "download", label: t.nav.download, icon: DownloadIcon },
     { id: "contact", label: t.nav.contact, icon: EmailIcon },
   ]
@@ -581,8 +581,8 @@ function App() {
     { id: "motivation", ref: motivationRef },
     { id: "objectives", ref: objectivesRef },
     { id: "proposal", ref: proposalRef },
-    { id: "conclusion", ref: conclusionRef },
     { id: "features", ref: featuresRef },
+    { id: "conclusion", ref: conclusionRef },
     { id: "download", ref: downloadRef },
     { id: "contact", ref: contactRef },
   ]
@@ -1047,30 +1047,6 @@ function App() {
             </div>
           )}
         </div>
-
-        {/* Controles de presentación */}
-        <div className="presentation-controls">
-          <button onClick={handlePrevSlide} disabled={currentSlide === 0} className="presentation-nav-btn">
-            <span>← Anterior</span>
-          </button>
-
-          <div className="presentation-info">
-            <div className="presentation-counter">
-              {currentSlide + 1} / {sections.length}
-            </div>
-            <div className="presentation-section-name">
-              {navItems.find((item) => item.id === currentSection.id)?.label}
-            </div>
-          </div>
-
-          <button
-            onClick={handleNextSlide}
-            disabled={currentSlide === sections.length - 1}
-            className="presentation-nav-btn"
-          >
-            <span>Siguiente →</span>
-          </button>
-        </div>
       </div>
     )
   }
@@ -1274,6 +1250,28 @@ function App() {
         </div>
       </section>
 
+     <div className="section-separator"></div>
+
+      {/* Features Section */}
+      <section id="features" ref={featuresRef} className={getSectionClass("features-section")}>
+        <div className="section-container">
+          <div className="section-header">
+            <h2 className="section-title">{t.features.title}</h2>
+            <p className="section-description">{t.features.description}</p>
+          </div>
+
+          <div className="features-grid">
+            {features.map((feature, idx) => (
+              <div key={idx} className="feature-card" style={{ animationDelay: `${idx * 0.1}s` }}>
+                <div className="feature-icon">{feature.icon}</div>
+                <h3 className="feature-title">{feature.title}</h3>
+                <p className="feature-description">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <div className="section-separator"></div>
 
       {/* Conclusion Section */}
@@ -1301,28 +1299,6 @@ function App() {
               <h3 className="conclusion-card-title">{t.conclusion.impact.title}</h3>
               <p className="conclusion-card-desc">{t.conclusion.impact.description}</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="section-separator"></div>
-
-      {/* Features Section */}
-      <section id="features" ref={featuresRef} className={getSectionClass("features-section")}>
-        <div className="section-container">
-          <div className="section-header">
-            <h2 className="section-title">{t.features.title}</h2>
-            <p className="section-description">{t.features.description}</p>
-          </div>
-
-          <div className="features-grid">
-            {features.map((feature, idx) => (
-              <div key={idx} className="feature-card" style={{ animationDelay: `${idx * 0.1}s` }}>
-                <div className="feature-icon">{feature.icon}</div>
-                <h3 className="feature-title">{feature.title}</h3>
-                <p className="feature-description">{feature.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
