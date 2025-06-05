@@ -25,7 +25,7 @@ import com.example.myfinance.data.model.Usuario
  */
 @Database(
     entities = [Transaccion::class, Usuario::class, Categoria::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

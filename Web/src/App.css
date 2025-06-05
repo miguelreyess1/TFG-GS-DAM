@@ -695,7 +695,6 @@ html {
 .section-description {
   font-size: 1.25rem;
   color: var(--text-muted);
-  max-width: 48rem;
   margin-bottom: 2rem;
   line-height: 1.6;
 }
