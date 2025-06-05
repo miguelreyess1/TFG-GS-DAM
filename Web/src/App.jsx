@@ -1148,9 +1148,11 @@ function App() {
           <h2 className="hero-subtitle">{t.hero.subtitle}</h2>
           <p className="hero-description">{t.hero.description}</p>
           <div className="hero-buttons">
-            <button onClick={() => scrollToSection("download")} className="btn-primary">
-              {t.hero.downloadButton}
-            </button>
+            <a href="/MyFinance.apk" download>
+              <button className="btn-primary">
+                {t.hero.downloadButton}
+              </button>
+            </a>
           </div>
         </div>
       </section>
@@ -1355,8 +1357,7 @@ function App() {
             </div>
           </div>
 
-          {/* Botón de descarga */}
-          <a href="#" className="download-btn">
+          <a href="/MyFinance.apk" download className="download-btn">
             <DownloadIcon />
             <span>{t.download.button}</span>
           </a>
